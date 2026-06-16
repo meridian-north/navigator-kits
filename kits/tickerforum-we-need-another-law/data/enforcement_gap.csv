@@ -1,0 +1,6 @@
+statute,short_label,on_the_books_since,binding,criminal_cases_recent_era,persons_serving_10yr_terms,signal,note
+15 USC 2,Sherman Act §2 (monopolize),1890,yes,2 (Zito 2022; fuel-truck 2024),0,WARN,"100+ criminal §2 cases in first 80 yrs; none 1977–2022; recent pleas were probation, not decade terms"
+8 USC 1324,Harbor/transport/employ aliens,1952,yes,few (mostly worker- or smuggler-focused),~0 (corporate officers),WARN,"Officer/director imprisonment for employment-harboring is rare; most enforcement civil or worker-facing"
+CPT/CMS mandate,AMA coding license mandate,2000,yes (HIPAA standard),0 (no criminal action),0,WARN,"Govt mandates licensing a private copyright to bill; under Senate scrutiny 2025; no antitrust action"
+AICOA S.4746,Big-Tech non-discrimination,not yet (pending),no,n/a (not law),n/a,WATCH,"Reintroduced June 2026; failed twice before; would duplicate existing §2 authority"
+Open App Markets S.2153,App-store fee bill,not yet (pending),no,n/a (not law),n/a,WATCH,"Cleared committee in prior congresses; no floor vote"

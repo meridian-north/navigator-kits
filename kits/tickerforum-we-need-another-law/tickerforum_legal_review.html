@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TickerForum Financial Legal Corpus — "We Need ANOTHER Law!"</title>
+<style>
+  :root{
+    --bg:#0c0f14; --panel:#141a22; --panel2:#1b232e; --ink:#e8eef5; --mut:#8da0b4;
+    --line:#26303c; --acc:#5db0ff; --warn:#ff6b6b; --caution:#ffb454; --watch:#7aa2ff;
+    --low:#48c78e; --lore:#9a8cff; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  header{padding:22px 20px 14px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0f141b,#0c0f14)}
+  h1{margin:0;font-size:19px;letter-spacing:.2px}
+  .sub{color:var(--mut);font-size:13px;margin-top:5px;max-width:880px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 0;border-bottom:1px solid var(--line)}
+  .tab{padding:9px 14px;cursor:pointer;color:var(--mut);border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;font-size:13px}
+  .tab.on{color:var(--ink);background:var(--panel);border-color:var(--line)}
+  section{display:none;padding:20px 0}
+  section.on{display:block}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+  .stat{display:inline-flex;align-items:center;gap:6px;font:600 11px/1 var(--mono);padding:4px 8px;border-radius:6px;letter-spacing:.6px}
+  .WARN{background:rgba(255,107,107,.14);color:var(--warn);border:1px solid rgba(255,107,107,.4)}
+  .CAUTION{background:rgba(255,180,84,.14);color:var(--caution);border:1px solid rgba(255,180,84,.4)}
+  .WATCH{background:rgba(122,162,255,.14);color:var(--watch);border:1px solid rgba(122,162,255,.4)}
+  .LOW{background:rgba(72,199,142,.14);color:var(--low);border:1px solid rgba(72,199,142,.4)}
+  .LORE{background:rgba(154,140,255,.14);color:var(--lore);border:1px solid rgba(154,140,255,.4)}
+  .cite{font:600 12px var(--mono);color:var(--acc)}
+  .ttl{font-weight:600;margin:6px 0 4px;font-size:14.5px}
+  .meta{color:var(--mut);font-size:12px;margin-top:8px}
+  .cav{font:11.5px/1.5 var(--mono);color:#9fb0c2;margin-top:8px;background:var(--panel2);padding:8px;border-radius:8px;border:1px solid var(--line);word-break:break-word}
+  .pill{display:inline-block;font:11px var(--mono);color:var(--mut);background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:2px 9px;margin:3px 4px 0 0}
+  label{font-size:12px;color:var(--mut);display:block;margin:0 0 4px}
+  select,input{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px;font-size:13px}
+  .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut);font-weight:600;font-size:12px}
+  a{color:var(--acc)}
+  .axis{display:grid;grid-template-columns:90px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+  .axis b{color:var(--acc);font:600 12px var(--mono)}
+  .note{color:var(--mut);font-size:12.5px;margin-top:10px}
+  code{font:12px var(--mono);background:var(--panel2);padding:2px 5px;border-radius:5px}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 14px}
+  .fig{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 18px}
+  .figcap{color:var(--mut);font-size:12.5px;margin-top:8px}
+  .barlbl{font:600 12px var(--mono);fill:var(--ink)}
+  .barnum{font:700 13px var(--mono)}
+  .vbtn{background:var(--acc);color:#03121f;border:none;border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer}
+  .hashout{font:12px var(--mono);margin-top:10px;word-break:break-all}
+  .ok{color:var(--low)} .bad{color:var(--warn)}
+  .foot{color:var(--mut);font-size:12px;margin-top:24px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+<header>
+  <h1>TickerForum Financial Legal Corpus</h1>
+  <div class="sub">Six-axis index over Karl Denninger's <i>"We Need ANOTHER Law!"</i> (Market Ticker, 2026-06-14). A claim-<b>navigator</b>, not a claim-engine. Statute text is verbatim from primary sources; signals flag the gap between <i>law on the books</i> and <i>law in action</i>. <b>Not legal advice.</b></div>
+</header>
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <div class="tab on" data-t="grid">Statute Facet Grid</div>
+    <div class="tab" data-t="query">Query (6-Axis)</div>
+    <div class="tab" data-t="gap">Enforcement Gap</div>
+    <div class="tab" data-t="chain">One Law → Another</div>
+    <div class="tab" data-t="reshape">Reshape Question</div>
+    <div class="tab" data-t="verify">Verify (SHA-256)</div>
+  </div>
+
+  <!-- GRID -->
+  <section class="on" id="s-grid">
+    <div class="legend">
+      <span class="stat WARN">WARN · law in force, ~0 criminal enforcement</span>
+      <span class="stat CAUTION">CAUTION · contested / civil-only</span>
+      <span class="stat WATCH">WATCH · pending bill</span>
+      <span class="stat LOW">LOW · enforced / no signal</span>
+      <span class="stat LORE">LORE · rhetoric, quarantined</span>
+    </div>
+    <div class="grid" id="cards"></div>
+  </section>
+
+  <!-- QUERY -->
+  <section id="s-query">
+    <div class="row">
+      <div><label>WHO — cohort</label><select id="f-cohort"></select></div>
+      <div><label>WHERE — mechanism node</label><select id="f-mech"></select></div>
+      <div><label>HOW — source class</label><select id="f-class"></select></div>
+      <div><label>HOW — enforcement signal</label><select id="f-sig"></select></div>
+      <div><label>WHAT — title / citation grep</label><input id="f-grep" placeholder="e.g. 1324, CPT, AICOA"></div>
+    </div>
+    <div class="card" style="padding:0;overflow:auto">
+      <table id="qtable"><thead><tr>
+        <th>ID</th><th>Citation</th><th>Title</th><th>Class</th><th>Signal</th><th>Year</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+    <div class="note" id="qcount"></div>
+    <div class="card" id="notincorpus" style="display:none">
+      <b>Not in corpus?</b> Two paths: (1) widen the filters above for a deeper sweep, or (2) carry the guardrailed prompt from the <a href="#" onclick="go('reshape');return false">Reshape Question</a> tab to any LLM.
+    </div>
+  </section>
+
+  <!-- GAP -->
+  <section id="s-gap">
+    <div class="fig">
+      <b>Figure 1 — Enforcement Gap: law on the books vs. law in action</b>
+      <div id="gapchart"></div>
+      <div class="figcap">Criminal Sherman §2 prosecutions: 100+ in the Act's first ~80 years, then none 1977→2022; the two revival cases (Zito 2022, fuel-truck 2024) ended in probation, not decade terms. Persons serving 10-year terms under any bar here: effectively zero. WATCH rows are pending bills (not yet law), shown for contrast. Counts are illustrative of the documented record, not a litigation tally.</div>
+    </div>
+  </section>
+
+  <!-- CHAIN -->
+  <section id="s-chain">
+    <div class="fig">
+      <b>Figure 2 — "We Need ANOTHER Law!": each new bill traces back to an existing, lightly-enforced statute</b>
+      <div id="chainchart"></div>
+      <div class="figcap">Left: binding criminal/structural law already in force (WARN — near-zero criminal use). Right: the fresh bills proposed to address the same conduct (WATCH — not law). The arrows are the post's thesis made visual: a dormant felony statute on one side, a new bill on the other, joined by a shared mechanism node.</div>
+    </div>
+    <div class="fig">
+      <b>Figure 3 — Mechanism crossroads</b>
+      <div id="mechchart"></div>
+      <div class="figcap">Co-occurrence of mechanism nodes across the index — where the post's claims cluster. <code>antitrust_monopolization</code> and <code>criminal_enforcement</code> are the load-bearing nodes; the CPT/CMS lane is the one where, by design, no private party can bring a charge.</div>
+    </div>
+  </section>
+
+  <!-- RESHAPE -->
+  <section id="s-reshape">
+    <div class="card">
+      <label>Patient/citizen question (plain words)</label>
+      <input id="r-in" value="Isn't monopoly already illegal — so why do we keep passing new laws?">
+      <button class="vbtn" style="margin-top:10px" onclick="reshape()">Reshape →</button>
+    </div>
+    <div class="card"><b>Research string</b><div class="cav" id="r-research"></div></div>
+    <div class="card"><b>Guardrailed LLM prompt (portable)</b><div class="cav" id="r-prompt"></div></div>
+  </section>
+
+  <!-- VERIFY -->
+  <section id="s-verify">
+    <div class="card">
+      <b>In-browser SHA-256</b>
+      <div class="note">Drop a kit file to hash it locally (SubtleCrypto — nothing leaves your machine), then compare against <code>MANIFEST_SHA256.txt</code>.</div>
+      <input type="file" id="vfile" style="margin-top:10px">
+      <div class="hashout" id="vout"></div>
+    </div>
+    <div class="card">
+      <b>Corpus version</b>
+      <div class="note">Index: <code>tickerforum_legal_index_v1</code> · 12 records · generated June 2026. Any query output above is reproducible: same index + same filters → same rows, always.</div>
+    </div>
+  </section>
+
+  <div class="foot">
+    Leads, not verdicts. Indexed presence of a statute is not a finding of violation; a prosecution gap is a data point, not a verdict; pending bills are not law; editorial claims are graded, not adopted. Source article: <a href="https://market-ticker.org/akcs-www?post=255563" target="_blank" rel="noopener">market-ticker.org/…post=255563</a> · Statutes: <a href="https://www.law.cornell.edu/uscode/text/15/2" target="_blank" rel="noopener">15 USC §2</a>, <a href="https://www.law.cornell.edu/uscode/text/8/1324" target="_blank" rel="noopener">8 USC §1324</a>. Not legal advice.
+  </div>
+</div>
+
+<script>
+const DATA=[
+ {id:"tff-001",cite:"15 USC §2",title:"Sherman Act §2 — monopolize / attempt / conspire",year:1890,cls:"statute_enacted",sig:"WARN",mech:["antitrust_monopolization","criminal_enforcement"],coh:["big_tech","healthcare_providers","pharma","online_marketplaces"],link:"https://www.law.cornell.edu/uscode/text/15/2",cav:"binding law in force; felony on its face; penalty $100M corp / $1M person / 10yr (2004 amendment); indexed presence is not a finding of violation"},
+ {id:"tff-002",cite:"DOJ Antitrust",title:"Criminal §2 enforcement record over time",year:2024,cls:"enforcement_record",sig:"WARN",mech:["criminal_enforcement","regulatory_capture"],coh:["big_tech","healthcare_providers","pharma"],link:"https://www.americanbar.org/groups/antitrust_law/resources/magazine/2022-summer/criminal-enforcement-section-2-sherman-act/",cav:"100+ criminal §2 cases in first 80yr; last classic case 1977; ~45yr gap to US v. Zito 2022; recent pleas were probation, not 10yr terms"},
+ {id:"tff-003",cite:"8 USC §1324",title:"Bringing in / harboring / transporting / employing aliens",year:1952,cls:"statute_enacted",sig:"WARN",mech:["immigration_labor","criminal_enforcement"],coh:["employers_landlords","online_marketplaces"],link:"https://www.law.cornell.edu/uscode/text/8/1324",cav:"binding law in force; penalties 1–20yr by offense; harboring/transporting up to 5–10yr; employing 10+ knowing up to 5yr"},
+ {id:"tff-004",cite:"DOJ / DHS practice",title:"Employer / officer harboring enforcement record",year:2025,cls:"enforcement_record",sig:"WARN",mech:["criminal_enforcement","immigration_labor"],coh:["employers_landlords"],link:"https://www.justice.gov/sites/default/files/criminal-hrsp/legacy/2011/01/31/1324.pdf",cav:"corporate-officer imprisonment for employment-harboring is rare; most actions civil fines or worker-focused; denominator context required"},
+ {id:"tff-005",cite:"S.4746 (119th)",title:"American Innovation and Choice Online Act (AICOA) — reintroduced",year:2026,cls:"bill_pending",sig:"WATCH",mech:["antitrust_monopolization","app_store_fees","ad_tech_intermediation"],coh:["big_tech"],link:"https://www.judiciary.senate.gov/press/rep/releases/grassley-klobuchar-introduce-bipartisan-legislation-to-lower-prices-expand-consumer-choice-and-restore-online-competition-in-the-digital-marketplace",cav:"introduced not enacted; Grassley & Klobuchar June 2026; covers platforms ≥$175B rev / ≥34% reach; failed twice prior; layered on existing unenforced 15 USC §2"},
+ {id:"tff-006",cite:"S.2153 (119th)",title:"Open App Markets Act — app-store fees / sideloading",year:2025,cls:"bill_pending",sig:"WATCH",mech:["app_store_fees","antitrust_monopolization"],coh:["big_tech"],link:"https://www.congress.gov/bill/119th-congress/senate-bill/2153/text",cav:"introduced not enacted; targets 15–30% app-store commission & payment lock-in; prior versions cleared committee, no floor vote"},
+ {id:"tff-007",cite:"AMERICA Act",title:"Ad-tech / Google ad-intermediation divestiture bill",year:2025,cls:"bill_pending",sig:"WATCH",mech:["ad_tech_intermediation","antitrust_monopolization"],coh:["big_tech"],link:"https://www.congress.gov/",cav:"targets ad-exchange intermediation conflict; exact bill number unconfirmed this pass; referenced as the 'Google ad monopoly' bill; verify before citing"},
+ {id:"tff-008",cite:"HIPAA / CMS-AMA",title:"AMA CPT coding license mandate — national billing standard",year:2000,cls:"agency_practice",sig:"WARN",mech:["licensing_mandate","copyright_lock_in","regulatory_capture"],coh:["CMS_AMA","healthcare_providers"],link:"https://www.cms.gov/license/ama",cav:"CPT copyrighted by AMA; HIPAA designated CPT the national standard; providers must license to bill government; Sen. Cassidy MD demanded accounting of 'monopoly' profits 2025; monopoly characterization contested"},
+ {id:"tff-009",cite:"Editorial (Denninger)",title:"Private-equity rollup of physician/dental/clinical practices",year:2026,cls:"claim_editorial",sig:"CAUTION",mech:["private_equity_rollup","antitrust_monopolization"],coh:["healthcare_providers"],link:"https://market-ticker.org/akcs-www?post=255563",cav:"PE consolidation of practices is a documented trend; per-se 15 USC §2 characterization is author argument, not adjudicated; plausible mechanism, limited case law"},
+ {id:"tff-010",cite:"Editorial (Denninger)",title:"College tuition / medical-school capacity controls as collusion",year:2026,cls:"claim_editorial",sig:"CAUTION",mech:["antitrust_monopolization","regulatory_capture"],coh:["medical_schools","consumers"],link:"https://market-ticker.org/akcs-www?post=255563",cav:"residency-slot & accreditation capacity limits are real; antitrust framing is author argument; some tuition antitrust suits exist (e.g. 568 cartel); not adjudicated as to this claim; contested ≠ dismissed"},
+ {id:"tff-011",cite:"Editorial (Denninger)",title:"Pharmaceutical & online-marketplace monopolization",year:2026,cls:"claim_editorial",sig:"CAUTION",mech:["antitrust_monopolization","app_store_fees"],coh:["pharma","online_marketplaces"],link:"https://market-ticker.org/akcs-www?post=255563",cav:"ongoing FTC/DOJ civil actions exist (e.g. Amazon); criminal 15 USC §2 route the author prefers is largely unused; civil vs criminal distinction is the crux; not adjudicated"},
+ {id:"tff-012",cite:"Rhetoric (Denninger)",title:"Author remedy rhetoric — extrajudicial punishment language",year:2026,cls:"lore",sig:"LORE",mech:["regulatory_capture"],coh:["CMS_AMA"],link:"https://market-ticker.org/akcs-www?post=255563",cav:"'execute on the National Mall' is hyperbolic rhetoric; NOT indexed as a legal claim or endorsed; recorded for completeness, not adjudicated; corpus is a neutral navigator"}
+];
+
+// ---- GRID ----
+function card(d){
+  return `<div class="card">
+    <span class="cite">${d.cite}</span> <span class="stat ${d.sig}">${d.sig}</span>
+    <div class="ttl">${d.title}</div>
+    <div>${d.mech.map(m=>`<span class="pill">${m}</span>`).join("")}</div>
+    <div class="meta">${d.id} · ${d.cls} · ${d.year} · <a href="${d.link}" target="_blank" rel="noopener">primary source ↗</a></div>
+    <div class="cav">caveat: ${d.cav}</div>
+  </div>`;
+}
+document.getElementById("cards").innerHTML=DATA.map(card).join("");
+
+// ---- QUERY ----
+function uniq(key){const s=new Set();DATA.forEach(d=>{const v=d[key];(Array.isArray(v)?v:[v]).forEach(x=>s.add(x))});return[...s].sort();}
+function fill(id,key,label){const el=document.getElementById(id);el.innerHTML=`<option value="">${label}</option>`+uniq(key).map(v=>`<option>${v}</option>`).join("");}
+fill("f-cohort","coh","any cohort");fill("f-mech","mech","any mechanism");fill("f-class","cls","any class");fill("f-sig","sig","any signal");
+function runQuery(){
+  const co=f("f-cohort"),me=f("f-mech"),cl=f("f-class"),si=f("f-sig"),gr=f("f-grep").toLowerCase();
+  const rows=DATA.filter(d=>
+    (!co||d.coh.includes(co))&&(!me||d.mech.includes(me))&&(!cl||d.cls===cl)&&(!si||d.sig===si)&&
+    (!gr||(d.title+d.cite+d.id).toLowerCase().includes(gr)));
+  document.querySelector("#qtable tbody").innerHTML=rows.map(d=>
+    `<tr><td>${d.id}</td><td><a href="${d.link}" target="_blank" rel="noopener">${d.cite}</a></td><td>${d.title}</td><td>${d.cls}</td><td><span class="stat ${d.sig}">${d.sig}</span></td><td>${d.year}</td></tr>`).join("");
+  document.getElementById("qcount").textContent=`${rows.length} of ${DATA.length} records · reproducible: same index + same filters → same rows.`;
+  document.getElementById("notincorpus").style.display=rows.length?"none":"block";
+}
+function f(id){return document.getElementById(id).value;}
+["f-cohort","f-mech","f-class","f-sig","f-grep"].forEach(id=>document.getElementById(id).addEventListener("input",runQuery));
+runQuery();
+
+// ---- TABS ----
+function go(t){
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x.dataset.t===t));
+  document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id==="s-"+t));
+  if(t==="gap")drawGap();if(t==="chain"){drawChain();drawMech();}
+}
+document.getElementById("tabs").addEventListener("click",e=>{if(e.target.dataset.t)go(e.target.dataset.t);});
+
+// ---- FIG 1 GAP ----
+function drawGap(){
+  const rows=[
+    {l:"15 USC §2 — criminal cases (first ~80yr)",v:100,max:100,sig:"WARN",suf:"+"},
+    {l:"15 USC §2 — criminal cases 1977→2022",v:0,max:100,sig:"WARN",suf:""},
+    {l:"15 USC §2 — persons serving 10-yr terms",v:0,max:100,sig:"WARN",suf:""},
+    {l:"8 USC §1324 — officers/directors imprisoned",v:0,max:100,sig:"WARN",suf:"≈"},
+    {l:"CPT/CMS mandate — antitrust actions",v:0,max:100,sig:"WARN",suf:""},
+    {l:"AICOA / app-store — enacted into law",v:0,max:100,sig:"WATCH",suf:""}
+  ];
+  const W=940,rh=46,pad=18,labW=360,barW=W-labW-90;
+  let svg=`<svg viewBox="0 0 ${W} ${rows.length*rh+pad*2}" width="100%">`;
+  rows.forEach((r,i)=>{
+    const y=pad+i*rh, w=Math.max(3,(r.v/r.max)*barW);
+    const col=getComputedStyle(document.documentElement).getPropertyValue("--"+r.sig.toLowerCase());
+    svg+=`<text class="barlbl" x="0" y="${y+rh/2+4}">${r.l}</text>`;
+    svg+=`<rect x="${labW}" y="${y+8}" width="${barW}" height="${rh-22}" rx="5" fill="#1b232e"/>`;
+    svg+=`<rect x="${labW}" y="${y+8}" width="${w}" height="${rh-22}" rx="5" fill="${col}" opacity="0.85"/>`;
+    svg+=`<text class="barnum" x="${labW+barW+10}" y="${y+rh/2+5}" fill="${col}">${r.v}${r.suf}</text>`;
+  });
+  svg+=`</svg>`;
+  document.getElementById("gapchart").innerHTML=svg;
+}
+
+// ---- FIG 2 CHAIN ----
+function drawChain(){
+  const left=[
+    {t:"15 USC §2 — monopolize (felony, 1890)",sig:"WARN"},
+    {t:"15 USC §2 — same (app-store conduct)",sig:"WARN"},
+    {t:"15 USC §2 — same (ad-tech conduct)",sig:"WARN"}
+  ];
+  const right=[
+    {t:"AICOA S.4746 (2026)",sig:"WATCH"},
+    {t:"Open App Markets S.2153 (2025)",sig:"WATCH"},
+    {t:"AMERICA Act — ad-tech (2025)",sig:"WATCH"}
+  ];
+  const W=940,H=290,colY=i=>40+i*82,lx=30,lw=360,rx=560,rw=350;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%">`;
+  svg+=`<text x="${lx}" y="22" class="barlbl" fill="#8da0b4">ALREADY ILLEGAL · in force · ~0 criminal use</text>`;
+  svg+=`<text x="${rx}" y="22" class="barlbl" fill="#8da0b4">PROPOSED "ANOTHER LAW" · not enacted</text>`;
+  const cw=v=>getComputedStyle(document.documentElement).getPropertyValue("--"+v.toLowerCase());
+  left.forEach((n,i)=>{const y=colY(i);
+    svg+=`<rect x="${lx}" y="${y}" width="${lw}" height="56" rx="9" fill="#141a22" stroke="${cw('warn')}"/>`;
+    svg+=`<text x="${lx+14}" y="${y+25}" class="barlbl">${n.t}</text>`;
+    svg+=`<text x="${lx+14}" y="${y+44}" font-size="11" font-family="monospace" fill="${cw('warn')}">WARN · dormant criminal statute</text>`;
+    svg+=`<path d="M${lx+lw} ${y+28} C ${lx+lw+90} ${y+28}, ${rx-90} ${colY(i)+28}, ${rx} ${colY(i)+28}" stroke="${cw('watch')}" stroke-width="2" fill="none" marker-end="url(#a)"/>`;
+  });
+  right.forEach((n,i)=>{const y=colY(i);
+    svg+=`<rect x="${rx}" y="${y}" width="${rw}" height="56" rx="9" fill="#141a22" stroke="${cw('watch')}"/>`;
+    svg+=`<text x="${rx+14}" y="${y+25}" class="barlbl">${n.t}</text>`;
+    svg+=`<text x="${rx+14}" y="${y+44}" font-size="11" font-family="monospace" fill="${cw('watch')}">WATCH · pending, not law</text>`;
+  });
+  svg+=`<defs><marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="${cw('watch')}"/></marker></defs></svg>`;
+  document.getElementById("chainchart").innerHTML=svg;
+}
+
+// ---- FIG 3 MECH ----
+function drawMech(){
+  const counts={};DATA.forEach(d=>d.mech.forEach(m=>counts[m]=(counts[m]||0)+1));
+  const arr=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const W=940,rh=34,max=Math.max(...arr.map(a=>a[1])),labW=300,barW=W-labW-60;
+  let svg=`<svg viewBox="0 0 ${W} ${arr.length*rh+20}" width="100%">`;
+  arr.forEach((a,i)=>{const y=10+i*rh,w=(a[1]/max)*barW;
+    svg+=`<text class="barlbl" x="0" y="${y+rh/2+2}">${a[0]}</text>`;
+    svg+=`<rect x="${labW}" y="${y}" width="${w}" height="${rh-12}" rx="5" fill="${getComputedStyle(document.documentElement).getPropertyValue('--acc')}" opacity="0.8"/>`;
+    svg+=`<text class="barnum" x="${labW+w+8}" y="${y+rh/2+1}" fill="#8da0b4">${a[1]}</text>`;
+  });
+  svg+=`</svg>`;document.getElementById("mechchart").innerHTML=svg;
+}
+
+// ---- RESHAPE ----
+function reshape(){
+  const q=document.getElementById("r-in").value.trim();
+  document.getElementById("r-research").textContent=
+    `("Sherman Act" OR "15 U.S.C. 2") AND (criminal OR indictment OR "Section 2") AND (monopolization) AND (enforcement OR prosecution) 1977..2026 — cross-ref: AICOA S.4746; Open App Markets S.2153; CPT copyright HIPAA standard.`;
+  document.getElementById("r-prompt").textContent=
+`You are a careful legal-research assistant. Question: "${q}"
+GUARDRAILS:
+• Distinguish "already illegal" (statute exists) from "successfully prosecuted" (cases + sentences). They are different facts.
+• Grade evidence: binding statute > enforcement record > agency practice > pending bill > editorial claim > rhetoric.
+• Name gaps honestly: if criminal enforcement of a statute is near zero, say so AND say what that does and does not prove.
+• Do not assert any named party committed a crime; that is for a court.
+• Note civil vs. criminal antitrust routes and why DOJ historically chose civil.
+• Flag what to bring to a licensed attorney; state that statutory text may have been amended after your cutoff.
+NOT legal advice.`;
+}
+reshape();
+
+// ---- VERIFY ----
+document.getElementById("vfile").addEventListener("change",async e=>{
+  const file=e.target.files[0];if(!file)return;
+  const buf=await file.arrayBuffer();
+  const h=await crypto.subtle.digest("SHA-256",buf);
+  const hex=[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("");
+  document.getElementById("vout").innerHTML=`<b>${file.name}</b><br>SHA-256: <span class="ok">${hex}</span><br><span class="note">Compare against the line for this file in MANIFEST_SHA256.txt.</span>`;
+});
+</script>
+</body>
+</html>
