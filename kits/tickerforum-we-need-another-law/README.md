@@ -24,13 +24,24 @@ policy choice, not necessarily a failure of will. *"Already illegal" and "succes
 are different facts; the space between them is the whole study.* His extrajudicial-punishment
 rhetoric is quarantined as `lore`, recorded but neither adopted nor endorsed.
 
+## Two layers
+
+This kit is built in two layers (see the repo README). The **raw layer** (`raw/`,
+`data/`, `build_raw.py`, the webform) is sovereign and deterministic — no model in the result
+path; facts and caveat **tokens** are stored fields a local node or `grep` can deliver. The
+**narration layer** (the prose study below) is a model-written sweep over the raw layer,
+attributed via its `authored_by` stamp and regenerable on any LLM through `raw/NARRATION_PROMPT.md`.
+
 ## Contents
 
 | File | What it is |
 |------|------------|
-| `STUDY_6axis_we_need_another_law.md` | The six-axis study — the substantive centerpiece |
+| `raw/tickerforum_raw.md` · `raw/tickerforum_raw.json` | **Sovereign raw payload** — six-axis facts + caveat tokens + source links, no narration |
+| `raw/NARRATION_PROMPT.md` | Portable prompt to regenerate the study on any model (Claude/Grok/Gemini/local) |
+| `build_raw.py` | Deterministic generator for the raw layer (rebuild from the index) |
+| `STUDY_6axis_we_need_another_law.md` | The six-axis study — narration layer (model-authored, attributed) |
 | `tickerforum_legal_review.html` | Self-contained interactive webform (open in any browser, no server) |
-| `data/tickerforum_legal_index_v1.csv` | The statute/claim index — 12 records, embedded caveats |
+| `data/tickerforum_legal_index_v1.csv` | The statute/claim index — 12 records, controlled caveat tokens + source links |
 | `data/enforcement_gap.csv` | Backing data for Figure 1 |
 | `fig1_enforcement_gap.png` | Law on the books vs. law in action |
 | `fig2_one_law_chain.png` | "One law leads to another" — each bill → its dormant parent statute |

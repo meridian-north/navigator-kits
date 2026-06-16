@@ -7,6 +7,10 @@ posture: neutral on the politics · strong on the statutory record · method ful
 status: L1 — statute & enforcement index · June 2026
 license: "Text: CC BY 4.0 · Code: Apache-2.0"
 caveat: "not legal advice — indexed presence of a statute is not a finding of violation — a prosecution gap is a data point, not a verdict — pending bills are not law — editorial claims are graded, not adopted"
+narration_layer: true
+authored_by: "claude (frontier model) — this prose is a narration sweep, not the sovereign index"
+raw_source: "raw/tickerforum_raw.md (deterministic, controlled-token index — the source of truth)"
+note: "The facts, grades, and caveat tokens come from the raw index; this write-up is prose over them. Regenerate with any model via raw/NARRATION_PROMPT.md."
 ---
 
 # "We Need ANOTHER Law!"
