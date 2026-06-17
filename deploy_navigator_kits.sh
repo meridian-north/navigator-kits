@@ -37,8 +37,8 @@ mount_kit "$HOME/usc_section_query.html"                 "usc-section-lookup"   
 mount_kit "$HOME/usc_growth_curve.html"                  "usc-growth-curve"       no
 # nsclc_supplement_review.html is the user's PERSONAL health page — intentionally NOT published.
 
-git add index.html deploy_navigator_kits.sh kits
-git commit -m "Hub: mount all public kits (VAERS, 5-min VAERS, white paper, reader, supplements x2, legal corpus x5); QA-reviewed" || echo "→ nothing new to commit"
+git add index.html README.md deploy_navigator_kits.sh kits
+git commit -m "Hub + README: list all live kits with links (pharma, supplements, 7 legal); refresh README" || echo "→ nothing new to commit"
 gh auth switch --user meridian-north 2>/dev/null || true
 git push origin main
 echo ""
