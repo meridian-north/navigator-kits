@@ -41,5 +41,12 @@ git add index.html README.md deploy_navigator_kits.sh kits
 git commit -m "Hub + README: list all live kits with links (pharma, supplements, 7 legal); refresh README" || echo "→ nothing new to commit"
 gh auth switch --user meridian-north 2>/dev/null || true
 git push origin main
+
+# set the repo's website + description so github.com points to the live hub
+gh repo edit meridian-north/navigator-kits \
+  --homepage "https://meridian-north.github.io/navigator-kits/" \
+  --description "Open, browser-based navigator kits for reading the public record — vaccine safety, supplements & US law. Facts and method in the open. Not legal/medical advice." \
+  2>/dev/null && echo "→ set repo website + description" || echo "→ (skipped repo About edit — set it manually if needed)"
+
 echo ""
 echo "✓ Done. Live (~1 min): https://meridian-north.github.io/navigator-kits/"
