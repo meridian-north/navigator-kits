@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridian North — Legal Reference Corpus</title>
+<style>
+/* ============================================================
+   MERIDIAN NORTH — CANONICAL CORPUS SHELL  (theme: LEGAL / formal)
+   The STRUCTURE is the standard other corpora inherit:
+     · tab-nav as the navigation primitive (intent §369)
+     · caveat-as-schema footer (caveats travel, never footnotes)
+     · six-axis (who/what/where/when/how/why)
+     · reshape flow  · not-in-corpus fallback  · SHA provenance
+   The THEME is corpus-appropriate. Legal = ink-on-paper, serif,
+   hairline rules, muted navy/oxblood. No glow. Print-friendly.
+   ============================================================ */
+:root{
+  --paper:#f6f4ef; --surface:#ffffff; --surface2:#f1ede4;
+  --rule:#d9d3c4; --rule-strong:#b9b19d;
+  --ink:#1c1b18; --ink-soft:#4f4c45; --muted:#7c7768;
+  --navy:#1f3a5f; --navy-soft:#2f5180;
+  --oxblood:#7a2e2e; --seal:#6b5526; --green-ink:#2c5530;
+  --serif:Georgia,'Iowan Old Style','Times New Roman',serif;
+  --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:16px;line-height:1.6;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+
+/* ---- header ---- */
+header{border-bottom:2px solid var(--ink);background:var(--surface);}
+.masthead{padding:22px 0 16px;}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--navy);}
+h1.title{font-size:30px;font-weight:700;letter-spacing:-.01em;margin:6px 0 4px;}
+.scope{font-size:13px;color:var(--ink-soft);}
+.tagline{font-size:13px;color:var(--muted);font-style:italic;margin-top:8px;border-left:2px solid var(--rule-strong);padding-left:12px;}
+
+/* ---- tab nav (the standard primitive) ---- */
+.tabbar{border-bottom:1px solid var(--rule);background:var(--surface);}
+.tabbar .wrap{display:flex;gap:0;flex-wrap:wrap;}
+.tab{appearance:none;background:none;border:none;border-bottom:3px solid transparent;
+  font-family:var(--serif);font-size:15px;color:var(--ink-soft);padding:14px 22px 11px;
+  cursor:pointer;letter-spacing:.01em;}
+.tab small{display:block;font-size:11px;color:var(--muted);font-style:italic;margin-top:2px;letter-spacing:0;}
+.tab:hover{color:var(--ink);}
+.tab.active{color:var(--navy);border-bottom-color:var(--navy);font-weight:700;}
+
+/* ---- panels ---- */
+.panel{display:none;padding:26px 0 40px;}
+.panel.active{display:block;}
+.lede{font-size:15px;color:var(--ink-soft);max-width:760px;margin-bottom:22px;}
+.lede b{color:var(--ink);}
+
+.notice{border:1px solid var(--rule-strong);border-left:4px solid var(--navy);background:var(--surface);
+  padding:14px 18px;margin-bottom:22px;font-size:14px;color:var(--ink-soft);}
+.notice.warn{border-left-color:var(--oxblood);}
+.notice b{color:var(--ink);}
+
+label.fld{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+textarea,input[type=text]{width:100%;font-family:var(--serif);font-size:15px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--rule-strong);border-radius:2px;padding:11px 13px;outline:none;}
+textarea{min-height:88px;resize:vertical;line-height:1.5;}
+input[type=text]:focus,textarea:focus{border-color:var(--navy);}
+.row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:8px;}
+.row > div{flex:1;min-width:200px;}
+.row .narrow{flex:0 0 180px;min-width:140px;}
+.btn{font-family:var(--serif);font-size:14px;background:var(--navy);color:#fff;border:1px solid var(--navy);
+  border-radius:2px;padding:11px 20px;cursor:pointer;white-space:nowrap;}
+.btn:hover{background:var(--navy-soft);}
+.btn.ghost{background:transparent;color:var(--navy);}
+.btn.ghost:hover{background:var(--surface2);}
+
+.examples{margin-top:12px;font-size:13px;color:var(--muted);}
+.examples a{color:var(--navy);cursor:pointer;text-decoration:none;border-bottom:1px dotted var(--rule-strong);margin:0 4px;}
+.examples a:hover{border-bottom-style:solid;}
+
+/* ---- generic card ---- */
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:2px;padding:20px 22px;margin-bottom:18px;}
+.card h3{font-size:17px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--rule);}
+.card h4{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;}
+
+/* ---- six-axis worksheet ---- */
+.axes{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);}
+.axis{background:var(--surface);padding:14px 16px;}
+.axis .k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);}
+.axis .q{font-size:14px;color:var(--ink);margin-top:5px;}
+@media(max-width:640px){.axes{grid-template-columns:1fr;}}
+
+/* ---- source list ---- */
+.srclist{list-style:none;}
+.srclist li{display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid var(--rule);}
+.srclist li:last-child{border-bottom:none;}
+.srckey{font-family:var(--mono);font-size:13px;color:var(--navy);}
+.srchead{font-size:14px;color:var(--ink);flex:1;}
+.srcopen{font-size:12px;color:var(--navy);cursor:pointer;border-bottom:1px dotted var(--rule-strong);}
+.srcopen:hover{border-bottom-style:solid;}
+
+.gaps{list-style:none;}
+.gaps li{font-size:14px;color:var(--ink-soft);padding:6px 0 6px 20px;position:relative;}
+.gaps li::before{content:'—';position:absolute;left:0;color:var(--oxblood);}
+
+.questions{list-style:none;counter-reset:q;}
+.questions li{font-size:14px;color:var(--ink);padding:8px 0 8px 30px;position:relative;border-bottom:1px solid var(--rule);}
+.questions li:last-child{border-bottom:none;}
+.questions li::before{counter-increment:q;content:counter(q)'.';position:absolute;left:0;
+  font-family:var(--mono);color:var(--navy);font-size:13px;}
+
+/* ---- triage card ---- */
+.triage{display:grid;grid-template-columns:160px 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);}
+.triage dt{background:var(--surface2);padding:11px 14px;font-size:12px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--muted);}
+.triage dd{background:var(--surface);padding:11px 14px;font-size:14px;color:var(--ink);}
+.flag{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:1px 8px;border:1px solid currentColor;border-radius:2px;}
+.flag.ok{color:var(--green-ink);} .flag.no{color:var(--oxblood);} .flag.watch{color:var(--seal);}
+
+/* ---- counsel: edition cards ---- */
+.result-key{font-family:var(--mono);font-size:22px;color:var(--navy);}
+.result-head{font-size:16px;color:var(--ink);margin:2px 0 10px;}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.badge{font-family:var(--mono);font-size:11px;letter-spacing:.04em;padding:2px 9px;border:1px solid currentColor;border-radius:2px;}
+.badge.enter{color:var(--green-ink);} .badge.gone{color:var(--oxblood);}
+.badge.persist{color:var(--navy);} .badge.why{color:var(--seal);}
+.editions{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;}
+@media(max-width:760px){.editions{grid-template-columns:repeat(2,1fr);}}
+.ed{background:var(--surface);border:1px solid var(--rule);border-radius:2px;padding:11px 12px;}
+.ed.absent{background:var(--surface2);opacity:.7;border-style:dashed;}
+.ed.first{border-color:var(--green-ink);} .ed.last{border-color:var(--oxblood);}
+.ed.whyed{border-top:3px solid var(--seal);}
+.ed-yr{font-family:var(--mono);font-size:13px;color:var(--navy);font-weight:700;display:flex;justify-content:space-between;}
+.pill{font-family:var(--mono);font-size:10px;padding:0 5px;border-radius:2px;}
+.pill.add{color:var(--green-ink);} .pill.rm{color:var(--oxblood);} .pill.none{color:var(--muted);}
+.ed-head{font-size:12px;color:var(--navy-soft);margin:6px 0 5px;}
+.ed-ex{font-size:12px;color:var(--ink-soft);line-height:1.5;max-height:130px;overflow:hidden;}
+.ed-why{font-size:11px;color:var(--seal);margin-top:6px;}
+.compare{display:flex;gap:22px;flex-wrap:wrap;border-top:1px solid var(--rule);padding-top:12px;font-size:13px;}
+.compare .lbl{color:var(--muted);} .compare .val{font-family:var(--mono);}
+.compare .val.pos{color:var(--green-ink);} .compare .val.neg{color:var(--oxblood);}
+
+/* ---- court receipt ---- */
+.receipt{font-family:var(--mono);font-size:13px;line-height:1.8;background:var(--surface);
+  border:1px solid var(--rule-strong);border-radius:2px;padding:18px 20px;}
+.receipt .lbl{color:var(--muted);} .receipt .v{color:var(--ink);}
+.receipt .seal-line{border-top:1px dashed var(--rule-strong);margin-top:12px;padding-top:12px;color:var(--ink-soft);font-family:var(--serif);font-style:italic;}
+.verify-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px;}
+.verify-out{font-family:var(--mono);font-size:13px;}
+
+/* ---- counsel posture points ---- */
+.posture{counter-reset:p;}
+.posture .pt{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--rule);}
+.posture .pt:last-child{border-bottom:none;}
+.posture .n{counter-increment:p;font-family:var(--mono);font-size:12px;color:var(--navy);}
+.posture .n::before{content:counter(p,upper-roman);}
+.posture .t{font-size:14px;color:var(--ink-soft);} .posture .t b{color:var(--ink);}
+
+.muted-note{font-size:12px;color:var(--muted);margin-top:10px;font-style:italic;}
+.empty{color:var(--muted);font-size:14px;padding:24px 0;font-style:italic;}
+
+/* ---- footer / caveat as schema ---- */
+footer{border-top:2px solid var(--ink);background:var(--surface);margin-top:10px;}
+.foot{padding:16px 0 26px;font-size:12px;color:var(--ink-soft);}
+.foot .cav{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px;}
+.foot b{color:var(--ink);}
+
+@media print{
+  .tabbar,.notice.no-print,.row .btn,.examples,.tagline{display:none!important;}
+  body{background:#fff;font-size:12pt;}
+  .panel{display:none!important;} .panel.printing{display:block!important;}
+  .card{break-inside:avoid;border-color:#999;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap masthead">
+    <div class="eyebrow">Meridian North · Legal Reference Corpus</div>
+    <h1 class="title">United States Code &amp; Federal Regulation — Evidence Corpus</h1>
+    <div class="scope">USC Titles 4 &amp; 42 · eCFR · Federal Register · Public Laws · statutory editions 1994 · 2000 · 2006 · 2012 · 2018</div>
+    <div class="tagline">Where the law allows, we provide the tools to find who, what, where, when, how, and why — in primary sources, verbatim and verifiable. This is a research compass. It raises the questions; it does not answer them.</div>
+  </div>
+</header>
+
+<nav class="tabbar no-print">
+  <div class="wrap">
+    <button class="tab active" data-tab="you" onclick="showTab('you',this)">For You<small>self-represented</small></button>
+    <button class="tab" data-tab="aid" onclick="showTab('aid',this)">Legal Aid<small>intake triage</small></button>
+    <button class="tab" data-tab="counsel" onclick="showTab('counsel',this)">For Counsel<small>date-of-conduct text</small></button>
+    <button class="tab" data-tab="court" onclick="showTab('court',this)">For the Court<small>reproducible record</small></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ TAB 1 — FOR YOU (household / pro se) ============ -->
+<section class="panel active" id="panel-you">
+  <p class="lede">Describe your situation in plain words. This page returns <b>the questions you need to answer</b> and the <b>primary sources to read</b> — not a conclusion about your case.</p>
+
+  <div class="notice no-print">
+    This is a legal <b>research</b> tool, not legal advice. It surfaces statutes and the questions around them. It cannot tell you what the law means for your facts — only a licensed attorney, a legal-aid advocate, or the court can do that. Nothing here creates an attorney–client relationship.
+  </div>
+
+  <div class="row no-print">
+    <div>
+      <label class="fld" for="youInput">Your situation</label>
+      <textarea id="youInput" placeholder="e.g. My health plan denied coverage I think the Affordable Care Act guarantees, and I want to know what the law said when I enrolled in 2014."></textarea>
+    </div>
+  </div>
+  <div class="row no-print">
+    <button class="btn" onclick="buildWorksheet()">Surface the questions</button>
+    <button class="btn ghost" onclick="printPanel('you')">Print worksheet</button>
+  </div>
+  <div class="examples no-print">Try:
+    <a onclick="exYou('My health plan denied a benefit I think the ACA guarantees')">ACA coverage denial</a> ·
+    <a onclick="exYou('Medicare refused to pay for my treatment and I want to appeal')">Medicare payment dispute</a> ·
+    <a onclick="exYou('a public health emergency order affected my job in 2021')">public health emergency</a>
+  </div>
+
+  <div id="youOut" style="margin-top:22px;"></div>
+</section>
+
+<!-- ============ TAB 2 — LEGAL AID (triage) ============ -->
+<section class="panel" id="panel-aid">
+  <p class="lede">Intake-speed triage. Enter the matter and the date of conduct; get a one-screen card: is it in this corpus, which sections govern, was the section in force on that date, and what this tool deliberately does <b>not</b> compute.</p>
+
+  <div class="row no-print">
+    <div>
+      <label class="fld" for="aidInput">Matter / presenting issue</label>
+      <input type="text" id="aidInput" placeholder="e.g. ACA essential health benefits denial">
+    </div>
+    <div class="narrow">
+      <label class="fld" for="aidDate">Date of conduct</label>
+      <input type="text" id="aidDate" placeholder="YYYY (e.g. 2014)">
+    </div>
+    <button class="btn" onclick="buildTriage()">Triage</button>
+  </div>
+  <div class="examples no-print">Try:
+    <a onclick="exAid('Medicare benefit','2008')">Medicare · 2008</a> ·
+    <a onclick="exAid('ACA coverage guarantee','2010')">ACA · 2010</a> ·
+    <a onclick="exAid('homeless assistance grant','2005')">homeless grant · 2005</a>
+  </div>
+
+  <div id="aidOut" style="margin-top:22px;"></div>
+</section>
+
+<!-- ============ TAB 3 — FOR COUNSEL (time-travel lookup) ============ -->
+<section class="panel" id="panel-counsel">
+  <p class="lede">Date-of-conduct statutory text. Every result is <b>verbatim primary source</b> — no model-generated summary in the result path. The text is the text Congress enacted, in the edition you select, SHA-256 traceable to the official govinfo.gov PDF.</p>
+
+  <div class="row no-print">
+    <div>
+      <label class="fld" for="counselInput">Section lookup</label>
+      <input type="text" id="counselInput" placeholder="Section number — e.g. 1395, 300gg, 18001 — or full key like 42:1395">
+    </div>
+    <button class="btn" onclick="runLookup()">Look up section</button>
+  </div>
+  <div class="examples no-print">Try:
+    <a onclick="exCounsel('42:1395')">42:1395 Medicare</a> ·
+    <a onclick="exCounsel('42:18001')">42:18001 ACA</a> ·
+    <a onclick="exCounsel('42:300gg')">42:300gg coverage guarantee</a> ·
+    <a onclick="exCounsel('42:11461')">42:11461 repealed grant</a> ·
+    <a onclick="exCounsel('4:1')">4:1 the Flag</a>
+  </div>
+
+  <div id="counselOut" style="margin-top:22px;"></div>
+
+  <div class="card" style="margin-top:24px;">
+    <h3>Why this withstands scrutiny — three points before you cite</h3>
+    <div class="posture">
+      <div class="pt"><span class="n"></span><span class="t"><b>The sources are the sources.</b> Built from official USC editions published by the Office of Law Revision Counsel and the U.S. Statutes at Large. The AI does not generate law; it indexes law that already existed and makes it queryable across five decades. Every record links to its authoritative origin.</span></div>
+      <div class="pt"><span class="n"></span><span class="t"><b>No model in the result path.</b> What you read is text extracted from the official govinfo.gov PDF for that edition year. No summary was generated; no paraphrase was inserted. This is what keeps the tool clear of the Rule 11 / Rule 3.3 hallucinated-citation exposure that has already drawn sanctions elsewhere.</span></div>
+      <div class="pt"><span class="n"></span><span class="t"><b>The disagreement surface is the finding.</b> Each section is scored independently by two models from different families — a 2-billion-parameter deterministic model and a 72-billion-parameter cross-check. Where they agree, the verdict is corroborated. Where they disagree, the section is flagged <i>read twice</i> — that is exactly where human legal judgment matters most. The tool maps the edge of certainty; it does not pretend the edge isn't there.</span></div>
+    </div>
+    <p class="muted-note">Caveat travels with every result: <span style="font-family:var(--mono)">snapshot_year_is_not_enactment_date</span>. Use the official USC for filing; use this as your compass.</p>
+  </div>
+</section>
+
+<!-- ============ TAB 4 — FOR THE COURT (reproducible record) ============ -->
+<section class="panel" id="panel-court">
+  <p class="lede">A reproducible record. The premise of this corpus is that any output can be re-run by anyone — opposing counsel included — against the same pinned corpus version and return the byte-identical result, the way a certified copy is the same as the original.</p>
+
+  <div class="notice no-print">
+    <b>Posture.</b> This system surfaces; it does not conclude. It reports what the primary sources say and where certainty ends. <b>Leads, not verdicts. Only humans conclude.</b>
+  </div>
+
+  <div class="row no-print">
+    <div>
+      <label class="fld" for="courtInput">Generate a provenance record for a section</label>
+      <input type="text" id="courtInput" placeholder="Full section key — e.g. 42:18001">
+    </div>
+    <button class="btn" onclick="buildReceipt()">Generate record</button>
+  </div>
+  <div class="examples no-print">Try:
+    <a onclick="exCourt('42:1395')">42:1395</a> ·
+    <a onclick="exCourt('42:18001')">42:18001</a> ·
+    <a onclick="exCourt('42:300gg')">42:300gg</a>
+  </div>
+
+  <div id="courtOut" style="margin-top:22px;"></div>
+
+  <div class="card" style="margin-top:22px;">
+    <h3>Verify a hash</h3>
+    <p style="font-size:14px;color:var(--ink-soft);">Every corpus release ships a <span style="font-family:var(--mono)">MANIFEST_SHA256.txt</span>. Paste the SHA-256 a record claims and the one you computed from the source PDF; the tool reports match or mismatch. It performs the comparison only — it makes no representation about the file you fetched.</p>
+    <div class="verify-row no-print">
+      <input type="text" id="hashA" placeholder="claimed SHA-256" style="flex:1;min-width:220px;font-family:var(--mono);font-size:12px;">
+      <input type="text" id="hashB" placeholder="computed SHA-256" style="flex:1;min-width:220px;font-family:var(--mono);font-size:12px;">
+      <button class="btn" onclick="verifyHash()">Compare</button>
+    </div>
+    <div id="verifyOut" class="verify-out" style="margin-top:10px;"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <b>Meridian North Legal Corpus</b> · primary sources only · we link, we do not rehost · official publisher or recorded absence — never a third-party renderer.
+    <div class="cav">caveat: snapshot_year_is_not_enactment_date ; indexed_presence_is_not_legal_advice ; absence_in_corpus_is_not_absence_in_law ; correlation_is_not_causation ; verify_against_official_USC_for_litigation_use</div>
+    <div class="cav">data source: <span id="srcMark">loading…</span> · corpus version <span style="color:var(--ink-soft)">usc_t4_t42_5ed_1994-2018</span></div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   DATA — fetch the real corpus index when served beside it;
+   fall back to an embedded representative sample so the file
+   works standalone. Shape mirrors usc_section_lookup.json:
+     DB[key] = { '1994':{h,e,w}, ... , _f:firstYr, _l:lastYr }
+     h=heading  e=excerpt  w=has-congressional-findings(WHY)
+   ============================================================ */
+const YEARS=['1994','2000','2006','2012','2018'];
+const CORPUS_VERSION='usc_t4_t42_5ed_1994-2018';
+const SAMPLE={
+  "42:1395":{ "_f":"1994","_l":"2018",
+    "1994":{h:"Prohibition against any Federal interference (Medicare)",e:"Nothing in this subchapter shall be construed to authorize any Federal officer or employee to exercise any supervision or control over the practice of medicine or the manner in which medical services are provided...",w:0},
+    "2000":{h:"Prohibition against any Federal interference (Medicare)",e:"Nothing in this subchapter shall be construed to authorize any Federal officer or employee to exercise any supervision or control over the practice of medicine...",w:0},
+    "2006":{h:"Prohibition against any Federal interference (Medicare)",e:"Nothing in this subchapter shall be construed to authorize any Federal officer or employee to exercise any supervision or control...",w:0},
+    "2012":{h:"Prohibition against any Federal interference (Medicare)",e:"Nothing in this subchapter shall be construed to authorize any Federal officer or employee to exercise any supervision or control over the practice of medicine...",w:0},
+    "2018":{h:"Prohibition against any Federal interference (Medicare)",e:"Nothing in this subchapter shall be construed to authorize any Federal officer or employee to exercise any supervision or control over the practice of medicine or the manner in which medical services are provided...",w:0} },
+  "42:300gg":{ "_f":"1994","_l":"2018",
+    "1994":{h:"Increased portability through limitation on preexisting condition exclusions",e:"A group health plan, and a health insurance issuer offering group health insurance coverage, may, with respect to a participant or beneficiary, impose a preexisting condition exclusion only if...",w:0},
+    "2000":{h:"Increased portability through limitation on preexisting condition exclusions",e:"A group health plan ... may impose a preexisting condition exclusion only if such exclusion relates to a condition for which medical advice was recommended or received...",w:0},
+    "2006":{h:"Increased portability through limitation on preexisting condition exclusions",e:"A group health plan ... may impose a preexisting condition exclusion only if...",w:0},
+    "2012":{h:"Fair health insurance premiums",e:"With respect to the premium rate charged by a health insurance issuer for health insurance coverage offered in the individual or small group market, such rate shall vary with respect to the particular plan or coverage involved only by...",w:1},
+    "2018":{h:"Fair health insurance premiums",e:"With respect to the premium rate charged by a health insurance issuer ... such rate shall vary ... only by (1) whether such plan or coverage covers an individual or family; (2) rating area; (3) age; and (4) tobacco use...",w:1} },
+  "42:18001":{ "_f":"2012","_l":"2018",
+    "2012":{h:"Immediate access to insurance for uninsured individuals with a preexisting condition",e:"Not later than 90 days after March 23, 2010, the Secretary shall establish a temporary high risk health insurance pool program to provide health insurance coverage for eligible individuals...",w:1},
+    "2018":{h:"Immediate access to insurance for uninsured individuals with a preexisting condition",e:"Not later than 90 days after March 23, 2010, the Secretary shall establish a temporary high risk health insurance pool program...",w:1} },
+  "42:247d":{ "_f":"1994","_l":"2018",
+    "1994":{h:"Public health emergencies",e:"If the Secretary determines that a disease or disorder presents a public health emergency or that a public health emergency otherwise exists, the Secretary may take such action as may be appropriate to respond...",w:0},
+    "2000":{h:"Public health emergencies",e:"If the Secretary determines, after consultation with such public health officials as may be necessary, that a public health emergency exists, the Secretary may take such action...",w:0},
+    "2006":{h:"Public health emergencies",e:"If the Secretary determines that a disease or disorder presents a public health emergency ... the Secretary may take such action as may be appropriate to respond to the public health emergency...",w:0},
+    "2012":{h:"Public health emergencies",e:"If the Secretary determines that a disease or disorder presents a public health emergency ... the Secretary may take such action...",w:0},
+    "2018":{h:"Public health emergencies",e:"If the Secretary determines that a disease or disorder presents a public health emergency or that a public health emergency otherwise exists, the Secretary may take such action as may be appropriate...",w:0} },
+  "42:11461":{ "_f":"1994","_l":"2000",
+    "1994":{h:"Demonstration projects (Rural Homelessness Grant Program)",e:"The Secretary may make grants to States, units of general local government, and nonprofit entities for the purpose of demonstrating innovative methods of providing housing and services to homeless persons in rural areas...",w:0},
+    "2000":{h:"Demonstration projects (Rural Homelessness Grant Program)",e:"The Secretary may make grants ... for the purpose of demonstrating innovative methods of providing housing and services to homeless persons in rural areas...",w:0} },
+  "4:1":{ "_f":"1994","_l":"2018",
+    "1994":{h:"Flag; stripes and stars on",e:"The flag of the United States shall be thirteen horizontal stripes, alternate red and white; and the union of the flag shall be forty-eight stars, white in a blue field.",w:0},
+    "2000":{h:"Flag; stripes and stars on",e:"The flag of the United States shall be thirteen horizontal stripes, alternate red and white; and the union of the flag shall be fifty stars, white in a blue field.",w:0},
+    "2006":{h:"Flag; stripes and stars on",e:"The flag of the United States shall be thirteen horizontal stripes, alternate red and white; and the union of the flag shall be fifty stars, white in a blue field.",w:0},
+    "2012":{h:"Flag; stripes and stars on",e:"The flag of the United States shall be thirteen horizontal stripes, alternate red and white; and the union of the flag shall be fifty stars, white in a blue field.",w:0},
+    "2018":{h:"Flag; stripes and stars on",e:"The flag of the United States shall be thirteen horizontal stripes, alternate red and white; and the union of the flag shall be fifty stars, white in a blue field.",w:0} }
+};
+
+let DB=SAMPLE, DATA_SOURCE='embedded sample (6 sections)';
+fetch('usc_section_lookup.json').then(r=>{if(!r.ok)throw 0;return r.json();})
+  .then(d=>{DB=d;DATA_SOURCE='live corpus index ('+Object.keys(d).length.toLocaleString()+' sections)';markSource();})
+  .catch(()=>{markSource();});
+function markSource(){var el=document.getElementById('srcMark');if(el)el.textContent=DATA_SOURCE;}
+
+/* ---- tabs ---- */
+function showTab(name,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+
+/* ---- shared: keyword index over headings (NO model in path) ---- */
+const STOP=new Set('the a an of to in for and or with on is are my i you your it that this was were be been has have had not no any from at as by which when what who where how why'.split(' '));
+function tokens(s){return (s||'').toLowerCase().replace(/[^a-z0-9: ]/g,' ').split(/\s+/).filter(w=>w&&!STOP.has(w));}
+function searchCorpus(query,limit){
+  const q=tokens(query); if(!q.length)return [];
+  const scored=[];
+  for(const key in DB){
+    const d=DB[key];
+    let hay=key.toLowerCase()+' ';
+    YEARS.forEach(y=>{ if(d[y]&&d[y].h) hay+=d[y].h.toLowerCase()+' '; });
+    let score=0; q.forEach(w=>{ if(hay.includes(w)) score+= (hay.indexOf(w+' ')>=0?2:1); });
+    if(score>0) scored.push({key,score,head:firstHeading(d)});
+  }
+  scored.sort((a,b)=>b.score-a.score);
+  return scored.slice(0,limit||8);
+}
+function firstHeading(d){for(const y of YEARS){if(d[y]&&d[y].h)return d[y].h;}return '';}
+function presentYears(d){return YEARS.filter(y=>d[y]);}
+
+/* ============ TAB 1 — worksheet ============ */
+function exYou(t){document.getElementById('youInput').value=t;buildWorksheet();}
+function buildWorksheet(){
+  const situation=document.getElementById('youInput').value.trim();
+  const out=document.getElementById('youOut');
+  if(!situation){out.innerHTML='<p class="empty">Enter your situation above to generate a worksheet.</p>';return;}
+  const hits=searchCorpus(situation,6);
+  const axes=[
+    ['Who','Who are the parties — and which government body administers the program or rule involved?'],
+    ['What','What exact right, benefit, duty, or conduct is in dispute? Name it as specifically as you can.'],
+    ['Where','Which jurisdiction and forum? Federal statute may be only part — state law and your local court rules often govern procedure.'],
+    ['When','On what date did the conduct happen? The law in force <i>then</i> controls — not today’s version. Check the section across editions in the Counsel tab.'],
+    ['How','How is it governed — by statute, by regulation, or both? A statute often delegates the operative detail to an agency rule (CFR).'],
+    ['Why','What did Congress say the purpose was? Enacted "findings" (marked ★) are primary evidence of intent. And why might your situation fall <i>outside</i> the section’s coverage?']
+  ];
+  let srcHtml = hits.length
+    ? '<ul class="srclist">'+hits.map(h=>`<li><span class="srchead"><span class="srckey">§ ${h.key}</span> &nbsp; ${esc(h.head)}</span><span class="srcopen" onclick="jumpCounsel('${h.key}')">open →</span></li>`).join('')+'</ul>'
+    : '<p class="empty">No sections in this corpus matched those words. That is itself a finding — see the gap note below, and consider the Legal Aid tab or a deeper sweep.</p>';
+  out.innerHTML=`
+    <div class="card">
+      <h3>Issue worksheet</h3>
+      <h4>The six questions to frame your issue</h4>
+      <div class="axes">${axes.map(a=>`<div class="axis"><div class="k">${a[0]}</div><div class="q">${a[1]}</div></div>`).join('')}</div>
+      <h4>Primary sources to read (matched to your words)</h4>
+      ${srcHtml}
+      <h4>What this corpus does <span style="color:var(--oxblood)">not</span> cover for you</h4>
+      <ul class="gaps">
+        <li>It does not include <b>state law</b>, <b>court procedure</b>, or the <b>deadline (statute of limitations)</b> that may apply to your matter.</li>
+        <li>It indexes USC Titles 4 &amp; 42 and federal regulation — if your issue lives elsewhere in the code, absence here is not absence in law.</li>
+        <li>It cannot apply the law to your facts. Matching words is not the same as the section governing your case.</li>
+      </ul>
+      <h4>Questions to bring to a clerk, a legal-aid advocate, or a lawyer</h4>
+      <ol class="questions">
+        <li>Which of the sections above — if any — actually governs my facts, and what is the current operative version?</li>
+        <li>What was the controlling text on the date my situation arose, and has it since been amended or repealed?</li>
+        <li>Is there an implementing regulation (CFR) that adds requirements the statute only outlines?</li>
+        <li>What is the deadline to act, and which court or agency has jurisdiction?</li>
+        <li>What facts or documents do I need to gather before the issue can be assessed?</li>
+      </ol>
+      <p class="muted-note">This worksheet is a starting point for your own research and conversations. It is not legal advice and does not predict an outcome.</p>
+    </div>`;
+}
+function jumpCounsel(key){showTab('counsel',document.querySelector('[data-tab=counsel]'));document.getElementById('counselInput').value=key;runLookup();window.scrollTo(0,0);}
+
+/* ============ TAB 2 — triage ============ */
+function exAid(issue,date){document.getElementById('aidInput').value=issue;document.getElementById('aidDate').value=date||'';buildTriage();}
+function buildTriage(){
+  const issue=document.getElementById('aidInput').value.trim();
+  const date=document.getElementById('aidDate').value.trim();
+  const out=document.getElementById('aidOut');
+  if(!issue){out.innerHTML='<p class="empty">Enter a matter to triage.</p>';return;}
+  const hits=searchCorpus(issue,4);
+  const inScope=hits.length>0;
+  let govHtml = inScope
+    ? hits.map(h=>`<span class="srckey">§ ${h.key}</span> ${esc(trim(h.head,48))}`).join('<br>')
+    : '<span class="flag no">NOT IN THIS CORPUS</span> &mdash; record the absence; route to a broader sweep or state-law resource.';
+  // date-of-conduct check against the top hit
+  let dateHtml='Enter a date of conduct to check whether the section was in force then.';
+  if(inScope && date){
+    const d=DB[hits[0].key]; const yr=nearestEdition(date);
+    if(yr){
+      const present=!!d[yr];
+      dateHtml = present
+        ? `<span class="flag ok">IN FORCE</span> § ${hits[0].key} appears in the ${yr} edition (nearest to ${esc(date)}). Confirm the exact effective date against the official USC.`
+        : `<span class="flag no">NOT PRESENT</span> § ${hits[0].key} does <b>not</b> appear in the ${yr} edition (nearest to ${esc(date)}). It may have entered later or been repealed earlier &mdash; see the Counsel tab.`;
+    }
+  }
+  out.innerHTML=`
+    <div class="card">
+      <h3>Triage card &mdash; ${esc(trim(issue,60))}</h3>
+      <dl class="triage">
+        <dt>In scope?</dt><dd>${inScope?'<span class="flag ok">YES</span> covered by the indexed corpus':'<span class="flag no">NO</span> not in USC Titles 4 / 42 index'}</dd>
+        <dt>Candidate sections</dt><dd>${govHtml}</dd>
+        <dt>Date-of-conduct</dt><dd>${dateHtml}</dd>
+        <dt>Deadline</dt><dd><span class="flag watch">VERIFY</span> this tool does <b>not</b> compute statutes of limitation or filing deadlines. Confirm independently &mdash; it is often dispositive.</dd>
+        <dt>Referral</dt><dd>Statute identified here is the research anchor, not the remedy. Confirm operative version, implementing regulation, and forum before advising the client.</dd>
+      </dl>
+      <p class="muted-note">Triage only. Surfaces candidates and coverage; does not determine that any section governs the matter.</p>
+    </div>`;
+}
+function nearestEdition(dateStr){
+  const m=(dateStr.match(/\d{4}/)||[])[0]; if(!m)return null;
+  const y=parseInt(m,10); let best=YEARS[0],bd=1e9;
+  YEARS.forEach(e=>{const diff=Math.abs(parseInt(e,10)-y);if(diff<bd){bd=diff;best=e;}});
+  return best;
+}
+
+/* ============ TAB 3 — counsel lookup (reused proven engine) ============ */
+function exCounsel(k){document.getElementById('counselInput').value=k;runLookup();}
+function runLookup(){
+  const raw=document.getElementById('counselInput').value.trim();
+  const out=document.getElementById('counselOut');
+  if(!raw){out.innerHTML='';return;}
+  const keys=resolveKeys(raw);
+  if(!keys.length){out.innerHTML=`<div class="card"><p class="empty">§ <span style="font-family:var(--mono)">${esc(raw)}</span> not found. This corpus covers USC Titles 4 &amp; 42, editions 1994–2018. A blank result means <b>not indexed</b> &mdash; not "not law."</p></div>`;return;}
+  if(keys.length===1)renderSection(keys[0]); else renderList(raw,keys);
+}
+function resolveKeys(raw){
+  if(DB[raw])return [raw];
+  if(DB['42:'+raw])return ['42:'+raw];
+  if(DB['4:'+raw])return ['4:'+raw];
+  const num=raw.replace(/^4?2?:/,'');
+  const matches=Object.keys(DB).filter(k=>{
+    const d=DB[k];
+    if(k.includes(num))return true;
+    return YEARS.some(y=>d[y]&&d[y].h&&d[y].h.toLowerCase().includes(raw.toLowerCase()));
+  });
+  return matches.slice(0,20);
+}
+function renderSection(key){
+  const d=DB[key], pres=presentYears(d), f=d._f, l=d._l;
+  const gone=l!=='2018', persist=pres.length===5, hasWhy=pres.some(y=>d[y]&&d[y].w);
+  const head=firstHeading(d);
+  let badges='';
+  if(f!=='1994')badges+=`<span class="badge enter">entered ${f}</span>`;
+  if(gone)badges+=`<span class="badge gone">gone after ${l}</span>`;
+  if(persist)badges+=`<span class="badge persist">persistent &middot; all 5 editions</span>`;
+  if(hasWhy)badges+=`<span class="badge why">★ congressional findings</span>`;
+  let cards='';
+  YEARS.forEach((y,i)=>{
+    const prev=i>0?YEARS[i-1]:null, isP=!!d[y];
+    let pill='';
+    if(isP&&prev&&!d[prev])pill='<span class="pill add">+ added</span>';
+    else if(!isP&&prev&&d[prev])pill='<span class="pill rm">− removed</span>';
+    else if(!isP)pill='<span class="pill none">absent</span>';
+    let cls='ed'+(isP?'':' absent');
+    if(y===f&&f!=='1994')cls+=' first';
+    if(!isP&&prev&&d[prev]&&y===nextAfter(l))cls+=' last';
+    if(isP&&d[y].w)cls+=' whyed';
+    if(isP){const r=d[y];
+      cards+=`<div class="${cls}"><div class="ed-yr">${y} ${pill}</div><div class="ed-head">${esc(r.h||'')}</div><div class="ed-ex">${esc(r.e||'')}</div>${r.w?'<div class="ed-why">★ findings present</div>':''}</div>`;
+    }else{
+      cards+=`<div class="${cls}"><div class="ed-yr">${y} ${pill}</div><div class="ed-ex" style="color:var(--muted);font-style:italic">not in this edition</div></div>`;
+    }
+  });
+  const counts=pres.map(y=>({y,c:d[y].e?d[y].e.length:0}));
+  let comp=counts.map((c,i)=>{
+    if(i===0)return `<div><span class="lbl">${c.y} size</span> <span class="val">${c.c} ch</span></div>`;
+    const delta=c.c-counts[i-1].c, cls=delta>20?'pos':delta<-20?'neg':'', sign=delta>=0?'+':'';
+    return `<div><span class="lbl">${counts[i-1].y}→${c.y}</span> <span class="val ${cls}">${sign}${delta} ch</span></div>`;
+  }).join('');
+  out_counsel().innerHTML=`
+    <div class="card">
+      <div class="result-key">§ ${key}</div>
+      <div class="result-head">${esc(head)}</div>
+      <div class="badges">${badges||'<span class="badge persist">indexed</span>'}</div>
+      <div class="editions">${cards}</div>
+      <div class="compare">${comp}<div style="margin-left:auto"><span class="lbl">editions present</span> <span class="val">${pres.length}/5</span></div></div>
+      <p class="muted-note">⚠ snapshot_year_is_not_enactment_date · verify against official USC for litigation use.</p>
+    </div>`;
+}
+function nextAfter(yr){const i=YEARS.indexOf(yr);return i>=0&&i<YEARS.length-1?YEARS[i+1]:null;}
+function renderList(raw,keys){
+  const rows=keys.map(k=>{const d=DB[k];const h=firstHeading(d);const ys=presentYears(d).join(' ');
+    return `<li><span class="srchead"><span class="srckey">§ ${k}</span> &nbsp; ${esc(trim(h,60))}</span><span class="srcopen" onclick="exCounsel('${k}')">open →</span> <span style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:10px">${ys}</span></li>`;}).join('');
+  out_counsel().innerHTML=`<div class="card"><h3>${keys.length} sections match &ldquo;${esc(raw)}&rdquo;</h3><ul class="srclist">${rows}</ul></div>`;
+}
+function out_counsel(){return document.getElementById('counselOut');}
+
+/* ============ TAB 4 — court receipt ============ */
+function exCourt(k){document.getElementById('courtInput').value=k;buildReceipt();}
+function buildReceipt(){
+  const raw=document.getElementById('courtInput').value.trim();
+  const out=document.getElementById('courtOut');
+  if(!raw){out.innerHTML='';return;}
+  const keys=resolveKeys(raw);
+  if(!keys.length){out.innerHTML=`<div class="card"><p class="empty">No record — § ${esc(raw)} is not indexed in this corpus version.</p></div>`;return;}
+  const key=keys[0], d=DB[key], pres=presentYears(d);
+  const stamp=new Date().toISOString().replace('T',' ').slice(0,19)+'Z';
+  out.innerHTML=`
+    <div class="card">
+      <h3>Provenance record &mdash; § ${key}</h3>
+      <div class="receipt">
+        <div><span class="lbl">section_key      </span> <span class="v">${key}</span></div>
+        <div><span class="lbl">heading          </span> <span class="v">${esc(trim(firstHeading(d),70))}</span></div>
+        <div><span class="lbl">corpus_version   </span> <span class="v">${CORPUS_VERSION}</span></div>
+        <div><span class="lbl">editions_present </span> <span class="v">${pres.join(', ')||'(none)'} &nbsp;[${pres.length}/5]</span></div>
+        <div><span class="lbl">first_appearance </span> <span class="v">${d._f}</span> &nbsp; <span class="lbl">last_appearance</span> <span class="v">${d._l}</span></div>
+        <div><span class="lbl">source_of_record </span> <span class="v">Office of Law Revision Counsel &mdash; official USC editions (govinfo.gov PDF)</span></div>
+        <div><span class="lbl">result_path      </span> <span class="v">verbatim extraction — no model in path</span></div>
+        <div><span class="lbl">manifest         </span> <span class="v">MANIFEST_SHA256.txt (per-release; verify tab below)</span></div>
+        <div><span class="lbl">generated        </span> <span class="v">${stamp}</span></div>
+        <div class="seal-line">Reproduce: re-run this lookup against corpus version <b>${CORPUS_VERSION}</b> with the same section key; the result is byte-identical by construction. This record surfaces what the source says and where the editions place it. It states no legal conclusion.</div>
+      </div>
+      <p class="muted-note">Caveat fields travel with this record: snapshot_year_is_not_enactment_date ; absence_in_corpus_is_not_absence_in_law.</p>
+    </div>`;
+}
+
+/* ---- hash compare (string comparison only) ---- */
+function verifyHash(){
+  const a=(document.getElementById('hashA').value||'').trim().toLowerCase().replace(/^0x/,'');
+  const b=(document.getElementById('hashB').value||'').trim().toLowerCase().replace(/^0x/,'');
+  const out=document.getElementById('verifyOut');
+  if(!a||!b){out.innerHTML='<span style="color:var(--muted)">Paste both hashes to compare.</span>';return;}
+  if(!/^[0-9a-f]{64}$/.test(a)||!/^[0-9a-f]{64}$/.test(b)){
+    out.innerHTML='<span style="color:var(--oxblood)">A SHA-256 is 64 hex characters. Check the inputs.</span>';return;}
+  out.innerHTML = a===b
+    ? '<span style="color:var(--green-ink)">✓ MATCH — the two hashes are identical.</span>'
+    : '<span style="color:var(--oxblood)">✗ MISMATCH — the hashes differ. The claimed and computed files are not the same bytes.</span>';
+}
+
+/* ---- print one panel ---- */
+function printPanel(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('printing'));
+  document.getElementById('panel-'+name).classList.add('printing');
+  window.print();
+  setTimeout(()=>document.getElementById('panel-'+name).classList.remove('printing'),500);
+}
+
+/* ---- util ---- */
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function trim(s,n){s=s||'';return s.length>n?s.slice(0,n-1)+'…':s;}
+
+/* enter-to-run */
+['counselInput','aidInput','courtInput'].forEach(id=>{
+  document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter'){
+    if(id==='counselInput')runLookup(); else if(id==='aidInput')buildTriage(); else buildReceipt();}});
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridian North — Citation Resolver (v1, federal benefits)</title>
+<style>
+/* Canonical formal legal shell (shared tokens with legal_corpus_portal.html) */
+:root{
+  --paper:#f6f4ef;--surface:#fff;--surface2:#f1ede4;--rule:#d9d3c4;--rule-strong:#b9b19d;
+  --ink:#1c1b18;--ink-soft:#4f4c45;--muted:#7c7768;--navy:#1f3a5f;--navy-soft:#2f5180;
+  --oxblood:#7a2e2e;--seal:#6b5526;--green-ink:#2c5530;
+  --serif:Georgia,'Iowan Old Style','Times New Roman',serif;--mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:16px;line-height:1.55}
+.wrap{max-width:1040px;margin:0 auto;padding:0 26px}
+header{border-bottom:2px solid var(--ink);background:var(--surface)}
+.mast{padding:20px 0 14px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--navy)}
+h1{font-size:26px;margin:6px 0 3px}
+.scope{font-size:12.5px;color:var(--ink-soft)}
+.tagline{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:7px;border-left:2px solid var(--rule-strong);padding-left:11px}
+.tabbar{border-bottom:1px solid var(--rule);background:var(--surface)}
+.tabbar .wrap{display:flex;gap:0;flex-wrap:wrap}
+.tab{background:none;border:none;border-bottom:3px solid transparent;font-family:var(--serif);font-size:14.5px;color:var(--ink-soft);padding:12px 20px 9px;cursor:pointer}
+.tab.active{color:var(--navy);border-bottom-color:var(--navy);font-weight:700}
+.panel{display:none;padding:22px 0 40px}.panel.active{display:block}
+.lede{font-size:14.5px;color:var(--ink-soft);max-width:760px;margin-bottom:18px}.lede b{color:var(--ink)}
+label.fld{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+textarea,input[type=text]{width:100%;font-family:var(--serif);font-size:15px;color:var(--ink);background:var(--surface);border:1px solid var(--rule-strong);border-radius:2px;padding:10px 12px;outline:none}
+textarea{min-height:80px;resize:vertical;font-family:var(--mono);font-size:13px;line-height:1.5}
+input[type=text]:focus,textarea:focus{border-color:var(--navy)}
+.row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin:10px 0}
+.row>div{flex:1;min-width:200px}.row .narrow{flex:0 0 160px;min-width:130px}
+.btn{font-family:var(--serif);font-size:14px;background:var(--navy);color:#fff;border:1px solid var(--navy);border-radius:2px;padding:10px 18px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--navy-soft)}.btn.ghost{background:transparent;color:var(--navy)}.btn.ghost:hover{background:var(--surface2)}
+.examples{font-size:12.5px;color:var(--muted);margin-top:8px}
+.examples a{color:var(--navy);cursor:pointer;border-bottom:1px dotted var(--rule-strong);margin:0 3px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:2px;padding:16px 18px;margin-bottom:14px}
+.card h3{font-size:16px;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--rule)}
+.reskey{font-family:var(--mono);font-size:18px;color:var(--navy)}
+.reshead{font-size:15px;margin:2px 0 8px}
+.xref{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.tag{font-family:var(--mono);font-size:11px;padding:2px 8px;border:1px solid currentColor;border-radius:2px}
+.tag.ssa{color:var(--seal)}.tag.usc{color:var(--navy)}.tag.cfr{color:var(--green-ink)}.tag.warn{color:var(--oxblood)}.tag.rule{color:var(--muted)}
+.excerpt{font-family:var(--mono);font-size:12px;color:var(--ink-soft);line-height:1.5;background:var(--surface2);border-left:2px solid var(--rule-strong);padding:8px 10px;margin:8px 0;max-height:150px;overflow:auto}
+.prov{font-size:11px;color:var(--muted);font-family:var(--mono)}
+.miss{background:rgba(122,46,46,.06);border:1px solid rgba(122,46,46,.3);border-radius:2px;padding:9px 12px;font-size:13px;color:var(--oxblood)}
+.folder-item{border-bottom:1px solid var(--rule);padding:10px 0}.folder-item:last-child{border-bottom:none}
+.fi-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.notice{border:1px solid var(--rule-strong);border-left:4px solid var(--navy);background:var(--surface);padding:11px 14px;margin-bottom:16px;font-size:13px;color:var(--ink-soft)}
+.notice.warn{border-left-color:var(--oxblood)}.notice b{color:var(--ink)}
+.muted-note{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:8px}
+.empty{color:var(--muted);font-style:italic;padding:18px 0}
+.correct{font-size:12px;color:var(--navy);cursor:pointer;border-bottom:1px dotted var(--rule-strong)}
+.dict-row{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:12px;padding:5px 0;border-bottom:1px solid var(--rule)}
+.snap{display:inline-block;font-family:var(--mono);font-size:11px;padding:1px 7px;border:1px solid var(--rule-strong);border-radius:2px;margin:2px}
+.snap.served{background:var(--surface2);border-color:var(--navy);color:var(--navy)}
+footer{border-top:2px solid var(--ink);background:var(--surface);margin-top:8px}
+.foot{padding:14px 0 24px;font-size:11.5px;color:var(--ink-soft)}
+.foot .cav{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap mast">
+    <div class="eyebrow">Meridian North · Citation Resolver · v1 (federal benefits)</div>
+    <h1>Paste a citation — or a denial letter — get verbatim source</h1>
+    <div class="scope">SSA Act ↔ 42 U.S.C. ↔ 42 CFR · Titles 4 &amp; 42 · editions 1994–2018 · deterministic resolver, no model in the result path</div>
+    <div class="tagline">The resolver routes; the text is always verbatim from the signed corpus. SSA↔USC translations are routing candidates — confirm against the source shown.</div>
+  </div>
+</header>
+<nav class="tabbar">
+  <div class="wrap">
+    <button class="tab active" data-t="resolve" onclick="tab('resolve',this)">Resolve a citation</button>
+    <button class="tab" data-t="letter" onclick="tab('letter',this)">Denial letter → folder</button>
+    <button class="tab" data-t="office" onclick="tab('office',this)">Office layer</button>
+  </div>
+</nav>
+<main class="wrap">
+
+<!-- RESOLVE -->
+<section class="panel active" id="p-resolve">
+  <p class="lede">Type or paste any citation — <b>SSA § 1862</b>, <b>42 U.S.C. § 1395y</b>, <b>42 CFR § 411.15</b>. Optionally add a date of conduct. The resolver normalizes it, translates SSA↔USC, and pulls the verbatim section.</p>
+  <div class="row">
+    <div><label class="fld" for="ci">Citation</label><input type="text" id="ci" placeholder="e.g. SSA 1862  ·  42 USC 1395y  ·  sec. 223  ·  42 CFR 411.15"></div>
+    <div class="narrow"><label class="fld" for="cd">Date of conduct</label><input type="text" id="cd" placeholder="YYYY-MM-DD (optional)"></div>
+    <button class="btn" onclick="doResolve()">Resolve</button>
+  </div>
+  <div class="examples">Try:
+    <a onclick="exR('SSA 1862')">SSA § 1862</a> ·
+    <a onclick="exR('SSA 223','2010-03-01')">SSA § 223 (disability) @ 2010</a> ·
+    <a onclick="exR('42 USC 1395x')">42 U.S.C. § 1395x</a> ·
+    <a onclick="exR('section 205')">SSA § 205 (judicial review)</a> ·
+    <a onclick="exR('42 CFR 411.15')">42 CFR § 411.15</a>
+  </div>
+  <div id="rOut" style="margin-top:18px"></div>
+</section>
+
+<!-- LETTER -->
+<section class="panel" id="p-letter">
+  <p class="lede">Paste the text of a denial letter / EOB / notice of action. The tool extracts every citation, translates SSA↔USC, resolves each to verbatim source, and assembles a <b>matter authorities folder</b> — then exports a guardrailed prompt you can take to your own AI.</p>
+  <div class="notice warn">Research aid, not legal advice and not a docketing system. Extraction may miss or mis-read citations in scanned/OCR text — every result expands to the verbatim source so you can verify. Review before relying.</div>
+  <div class="row"><div><label class="fld" for="lt">Denial letter / notice text</label>
+    <textarea id="lt" placeholder="Paste the letter here. e.g. 'Your claim was denied under section 1862(a)(1)(A) of the Social Security Act (42 U.S.C. 1395y) as not reasonable and necessary. See also 42 CFR 411.15 and section 1869 for appeal rights...'"></textarea></div></div>
+  <div class="row">
+    <div class="narrow"><label class="fld" for="ld">Date of service</label><input type="text" id="ld" placeholder="YYYY-MM-DD"></div>
+    <button class="btn" onclick="doLetter()">Build authorities folder</button>
+    <button class="btn ghost" onclick="copyPrompt()">Copy shaped prompt →</button>
+  </div>
+  <div class="examples">Try: <a onclick="exL()">a sample Medicare denial</a></div>
+  <div id="lOut" style="margin-top:18px"></div>
+</section>
+
+<!-- OFFICE -->
+<section class="panel" id="p-office">
+  <p class="lede">The <b>office layer</b> lives only in this browser (localStorage) — it never leaves the building. It learns your shorthand and corrections: every time you fix a resolution, the tool remembers, and the model (when paired in v2) is needed less.</p>
+  <div class="row">
+    <div><label class="fld" for="sk">Your shorthand</label><input type="text" id="sk" placeholder="e.g. the wheelchair reg"></div>
+    <div><label class="fld" for="sv">→ resolves to (cite)</label><input type="text" id="sv" placeholder="e.g. 42 CFR 410.38"></div>
+    <button class="btn" onclick="addShorthand()">Teach</button>
+  </div>
+  <div id="oOut" style="margin-top:16px"></div>
+</section>
+
+</main>
+<footer><div class="wrap foot">
+  <b>Meridian North Citation Resolver v1</b> · deterministic cascade (exact → normalize → fuzzy → office dictionary) · SSA↔USC map is a SEED — verify against OLRC Table III / the SSA Compilation · primary sources only, we link, we do not rehost.
+  <div class="cav">data source: <span id="srcMark">loading…</span> · caveat: ssa_usc_translation_is_a_routing_candidate ; snapshot_year_is_not_enactment_date ; indexed_presence_is_not_legal_advice ; verify_against_official_source</div>
+</div></footer>
+
+<script>
+/* ============================================================
+   SSA Act § ↔ 42 U.S.C. § — SEED. Verify vs OLRC Table III / SSA Compilation.
+   confidence: 'verified' (pinned pair) | 'rule' (documented offset).
+   This is a ROUTING aid only — the authoritative text is the verbatim USC
+   section the user then reads. A wrong mapping surfaces as wrong text.
+   ============================================================ */
+const SSA_RULES = [
+  { title:'II (OASDI)', test:s=>/^2\d\d$/.test(s),
+    map:s=>String(parseInt(s,10)+200), note:'Title II §2xx → 42 U.S.C. §4xx (+200)' },
+  { title:'XIX (Medicaid)', test:s=>/^19(0[1-9]|1\d|2[0-5])$/.test(s),
+    map:s=>{const o=parseInt(s,10)-1901; return o===0?'1396':'1396'+String.fromCharCode(96+o);},
+    note:'Title XIX §1901+n → 42 U.S.C. §1396 + letter(n)' },
+];
+const SSA_VERIFIED = {
+  // Title II (key, also rule-covered)
+  '201':'401','202':'402','205':'405','216':'416','223':'423','226':'426',
+  // Title XVI (SSI) — irregular
+  '1601':'1381','1602':'1381a','1611':'1382','1612':'1382a','1613':'1382b','1614':'1382c','1631':'1383','1633':'1383b',
+  // Title XVIII (Medicare) — irregular; verified pairs only
+  '1801':'1395','1802':'1395a','1811':'1395c','1812':'1395d','1814':'1395f','1815':'1395g',
+  '1831':'1395j','1832':'1395k','1833':'1395l','1834':'1395m','1842':'1395u','1848':'1395w-4',
+  '1861':'1395x','1862':'1395y','1866':'1395cc','1867':'1395dd','1869':'1395ff','1877':'1395nn','1886':'1395ww','1895':'1395fff',
+  // Title XIX (key, also rule-covered)
+  '1902':'1396a','1903':'1396b','1905':'1396d','1915':'1396n','1916':'1396o',
+  // Title XXI (CHIP)
+  '2101':'1397aa','2110':'1397jj',
+};
+function ssaToUsc(sec){
+  sec = sec.replace(/\([^)]*\)/g,'');         // drop subsection for the lookup
+  if(SSA_VERIFIED[sec]) return {usc:SSA_VERIFIED[sec], conf:'verified', note:'pinned pair'};
+  for(const r of SSA_RULES){ if(r.test(sec)) return {usc:r.map(sec), conf:'rule', note:r.note}; }
+  return null;
+}
+const USC_TO_SSA = (()=>{ const m={}; for(const k in SSA_VERIFIED) m[SSA_VERIFIED[k]]=k; return m; })();
+
+/* ---- corpus ---- */
+const YEARS=['1994','2000','2006','2012','2018'];
+let DB={}, DATA_SOURCE='embedded sample';
+const SAMPLE={
+ "42:1395y":{_f:'1994',_l:'2018','2018':{h:'Exclusions from coverage and Medicare as secondary payer',e:'Notwithstanding any other provision of this subchapter, no payment may be made under part A or part B for any expenses incurred for items or services which... are not reasonable and necessary for the diagnosis or treatment of illness or injury...',w:0}},
+ "42:1395x":{_f:'1994',_l:'2018','2018':{h:'Definitions (Medicare)',e:'For purposes of this subchapter— (a) Spell of illness... (s) Medical and other health services... (r) Physician...',w:0}},
+ "42:1395ff":{_f:'1994',_l:'2018','2018':{h:'Determinations; appeals',e:'The Secretary shall promptly determine and make payment... Any individual dissatisfied with any initial determination... shall be entitled to reconsideration...',w:0}},
+ "42:423":{_f:'1994',_l:'2018','2018':{h:'Disability insurance benefit payments',e:'Every individual who— (1) is insured for disability insurance benefits... (2) has not attained retirement age... (3) has filed application... and (4) is under a disability... shall be entitled to a disability insurance benefit...',w:0}},
+ "42:405":{_f:'1994',_l:'2018','2018':{h:'Evidence, procedure, and certification for payments',e:'(g) Judicial review. Any individual, after any final decision of the Commissioner of Social Security made after a hearing to which he was a party... may obtain a review of such decision by a civil action... in the district court of the United States...',w:0}},
+ "42:1396a":{_f:'1994',_l:'2018','2018':{h:'State plans for medical assistance',e:'A State plan for medical assistance must— (1) provide that it shall be in effect in all subdivisions of the State... (10) provide for making medical assistance available...',w:0}},
+ "42:1395":{_f:'1994',_l:'2018','2018':{h:'Prohibition against any Federal interference',e:'Nothing in this subchapter shall be construed to authorize any Federal officer or employee to exercise any supervision or control over the practice of medicine...',w:0}}
+};
+function loadDB(paths,i){ i=i||0; if(i>=paths.length){DB=SAMPLE;DATA_SOURCE='embedded sample ('+Object.keys(SAMPLE).length+' sections)';mark();return;}
+  fetch(paths[i]).then(r=>{if(!r.ok)throw 0;return r.json();}).then(d=>{DB=d;DATA_SOURCE='live corpus ('+Object.keys(d).length.toLocaleString()+' sections)';mark();}).catch(()=>loadDB(paths,i+1)); }
+loadDB(['data/usc_section_lookup.json','usc_section_lookup.json']);
+function mark(){var e=document.getElementById('srcMark');if(e)e.textContent=DATA_SOURCE;}
+
+/* ---- office layer (localStorage; never leaves the browser) ---- */
+const OKEY='mn_office_layer_v1';
+function office(){ try{return JSON.parse(localStorage.getItem(OKEY))||{shorthand:{},corrections:{}};}catch(e){return {shorthand:{},corrections:{}};} }
+function saveOffice(o){ try{localStorage.setItem(OKEY,JSON.stringify(o));}catch(e){} }
+
+/* ---- resolver cascade ---- */
+function normalizeCite(raw){
+  let s=(raw||'').trim().toLowerCase();
+  s=s.replace(/[“”]/g,'"').replace(/§/g,' ').replace(/\bsec(tion|\.)?\b/g,' ').replace(/\bno\.?\b/g,' ');
+  s=s.replace(/\bu\.?\s*s\.?\s*c\.?\b/g,'usc').replace(/\bc\.?\s*f\.?\s*r\.?\b/g,'cfr');
+  s=s.replace(/\bpub(lic)?\.?\s*l(aw)?\.?\b/g,'pl').replace(/\bsocial security act\b/g,'ssa').replace(/\bstat\.?\b/g,'stat');
+  s=s.replace(/\bof (the )?(ssa|act|title [a-z0-9]+)\b.*$/,'');   // strip "...of the Social Security Act" tail
+  s=s.replace(/\bas amended\b.*$/,'');                            // strip "as amended..." tail
+  s=s.replace(/[—–]/g,'-').replace(/\s+/g,' ').trim();
+  return s;
+}
+function classify(s){
+  let m;
+  if(m=s.match(/\b(\d{1,2})\s*cfr\s*([0-9]+\.[0-9]+[a-z0-9\-]*)/)) return {type:'cfr',title:m[1],sec:m[2]};
+  if(m=s.match(/\bcfr\s*([0-9]+\.[0-9]+[a-z0-9\-]*)/)) return {type:'cfr',title:'42',sec:m[1]};
+  if(m=s.match(/\b(\d{1,2})\s*usc\s*([0-9]+[a-z0-9\-]*)/)) return {type:'usc',title:m[1],sec:m[2]};
+  if(m=s.match(/\bpl\s*(\d{1,3}-\d+)/)) return {type:'pl',sec:m[1]};
+  if(m=s.match(/\bssa\s*([0-9]+[a-z0-9()\-]*)/)) return {type:'ssa',sec:m[1]};
+  // bare number — guess SSA section if 1xxx/2xx, else USC 42
+  if(m=s.match(/\busc\s*([0-9]+[a-z0-9\-]*)/)) return {type:'usc',title:'42',sec:m[1]};
+  if(m=s.match(/^([0-9]{3,4}[a-z0-9()\-]*)$/)){ const n=m[1].replace(/\(.*$/,'');
+    if(/^(1[0-9]{3}|2[0-9]{2})$/.test(n)) return {type:'ssa',sec:m[1]};
+    return {type:'usc',title:'42',sec:m[1]}; }
+  return {type:'unknown',raw:s};
+}
+function uscKey(title,sec){ return title+':'+sec.replace(/\([^)]*\)/g,''); }
+function resolveCitation(raw){
+  const norm=normalizeCite(raw);
+  const off=office();
+  // office shorthand first (learned, deterministic)
+  if(off.shorthand[norm]) return resolveCitation(off.shorthand[norm]);
+  const c=classify(norm);
+  const out={input:raw,normalized:norm,type:c.type,layer:null};
+  if(c.type==='ssa'){
+    const t=ssaToUsc(c.sec);
+    out.ssa=c.sec;
+    if(!t){ out.note='No SSA→USC mapping seeded for §'+c.sec+' — gather OLRC Table III to complete.'; out.layer='ssa-unmapped'; return out; }
+    out.usc=t.usc; out.conf=t.conf; out.confNote=t.note;
+    out.key=uscKey('42',t.usc); out.layer='ssa-translate';
+  } else if(c.type==='usc'){ out.key=uscKey(c.title,c.sec); out.ssa=USC_TO_SSA[c.sec.replace(/\([^)]*\)/g,'')]||null; out.layer='usc-direct'; }
+  else if(c.type==='cfr'){ out.cfrKey=c.title+' CFR '+c.sec; out.layer='cfr'; return out; }
+  else if(c.type==='pl'){ out.pl=c.sec; out.layer='pl'; return out; }
+  else { out.layer='unknown'; return out; }
+  // resolve against corpus
+  const d=DB[out.key];
+  if(d){ const yr=YEARS.filter(y=>d[y]).pop(); const row=d[yr]||{}; out.found=true; out.heading=row.h||firstHeading(d); out.excerpt=row.e||''; out.editions=YEARS.filter(y=>d[y]); out._f=d._f; out._l=d._l; }
+  else { out.found=false; }
+  return out;
+}
+function firstHeading(d){for(const y of YEARS){if(d[y]&&d[y].h)return d[y].h;}return '';}
+
+/* ---- citation extractor (denial letters) ---- */
+function extractCitations(text){
+  const found=[]; const seen=new Set();
+  const pats=[
+    /\b\d{1,2}\s*(?:u\.?\s*s\.?\s*c\.?)\s*§?\s*\d+[a-z0-9\-]*(?:\([a-z0-9]+\))*/gi,
+    /\b\d{1,2}\s*(?:c\.?\s*f\.?\s*r\.?)\s*§?\s*\d+\.\d+[a-z0-9\-]*/gi,
+    /\b(?:section|sec\.?|§)\s*(?:1[0-9]{3}|2[0-9]{2})(?:\([a-z0-9]+\))*(?:\s+of\s+the\s+(?:social security )?act)?/gi,
+    /\bpub(?:lic)?\.?\s*l(?:aw)?\.?\s*(?:no\.?)?\s*\d{1,3}[-–]\d+/gi
+  ];
+  for(const p of pats){ let m; while((m=p.exec(text))!==null){ const raw=m[0].trim(); const k=normalizeCite(raw); if(!seen.has(k)){seen.add(k);found.push(raw);} } }
+  return found;
+}
+
+/* ---- date-of-conduct (honest) ---- */
+function nearestSnapshot(dateStr){
+  const m=(dateStr||'').match(/\d{4}/); if(!m) return null;
+  const y=parseInt(m[0],10); let prior=null;
+  for(const e of YEARS){ if(parseInt(e,10)<=y) prior=e; }
+  const isExact=YEARS.includes(String(y));
+  return {target:y, served:prior||YEARS[0], exact:isExact, below: !prior};
+}
+function dateCaveat(dc){
+  if(!dc) return '';
+  const s=nearestSnapshot(dc); if(!s) return '';
+  if(s.exact) return `<span class="snap served">${s.served} edition</span> exact snapshot for ${dc}.`;
+  if(s.below) return `<span class="tag warn">before corpus</span> ${dc} predates the earliest edition (${YEARS[0]}). Recorded absence — verify against Statutes at Large.`;
+  return `<span class="snap served">${s.served} base</span> + Public-Law amendments through ${dc} <span class="tag rule">snapshot + deltas</span> — this is the nearest-prior edition, not exact-date text. Apply the P.L. deltas (gather pending) or verify against the official USC for the date of conduct.`;
+}
+
+/* ---- UI: resolve ---- */
+function tab(name,btn){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('p-'+name).classList.add('active');if(btn)btn.classList.add('active');if(name==='office')renderOffice();}
+function exR(c,d){document.getElementById('ci').value=c;document.getElementById('cd').value=d||'';doResolve();}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function resultCard(r,dc){
+  let xref='';
+  if(r.ssa) xref+=`<span class="tag ssa">SSA § ${esc(r.ssa)}</span>`;
+  if(r.usc||r.key) xref+=`<span class="tag usc">42 U.S.C. § ${esc(r.usc||r.key.split(':')[1])}</span>`;
+  if(r.conf==='rule') xref+=`<span class="tag rule">mapping: rule (${esc(r.confNote)})</span>`;
+  if(r.conf==='verified') xref+=`<span class="tag rule">mapping: verified pair</span>`;
+  if(r.layer==='ssa-unmapped') return `<div class="card"><div class="reskey">SSA § ${esc(r.ssa)}</div><div class="miss">${esc(r.note)}</div></div>`;
+  if(r.layer==='cfr') return `<div class="card"><div class="reskey">${esc(r.cfrKey)}</div><div class="reshead">Regulation — eCFR</div><div class="miss">CFR text not in this v1 sample. eCFR is gathered; wire the CFR index to resolve. Expands to verbatim eCFR when present.</div></div>`;
+  if(r.layer==='pl') return `<div class="card"><div class="reskey">Pub. L. ${esc(r.pl)}</div><div class="miss">Public Law text gathered (5,992 records) — wire the PL index to resolve.</div></div>`;
+  if(r.layer==='unknown') return `<div class="card"><div class="empty">Couldn't parse "${esc(r.input)}" as a citation. Here's what I matched: <code>${esc(r.normalized)}</code>. Never a guess — try a clearer form, or teach it in the Office layer.</div></div>`;
+  let body;
+  if(r.found){
+    body=`<div class="reshead">${esc(r.heading)}</div><div class="xref">${xref}</div>`+
+      (dc?`<div class="muted-note">Date of conduct: ${dateCaveat(dc)}</div>`:'')+
+      `<div class="excerpt">${esc(r.excerpt)||'(verbatim text loads from corpus)'}</div>`+
+      `<div class="prov">editions present: ${(r.editions||[]).join(' ')||'—'} · corpus key ${esc(r.key)} · verbatim source · SHA-manifested</div>`+
+      `<div style="margin-top:8px"><span class="correct" onclick="correctPrompt('${esc(r.input)}')">↳ wrong section? teach the correction</span></div>`;
+  } else {
+    body=`<div class="xref">${xref}</div><div class="miss">§ ${esc(r.key)} not in the loaded corpus (sample = 7 benefits sections; serve the full index to resolve all). A blank means <b>not indexed</b>, never "not law."</div>`;
+  }
+  return `<div class="card"><div class="reskey">${r.usc?'42 U.S.C. § '+esc(r.usc):esc(r.key||r.input)}</div>${body}</div>`;
+}
+function doResolve(){
+  const raw=document.getElementById('ci').value.trim(), dc=document.getElementById('cd').value.trim();
+  const out=document.getElementById('rOut');
+  if(!raw){out.innerHTML='<div class="empty">Enter a citation above.</div>';return;}
+  out.innerHTML=resultCard(resolveCitation(raw),dc);
+}
+function correctPrompt(input){
+  const right=prompt('Resolve "'+input+'" to which citation? (e.g. 42 USC 1395x). Stored locally only.');
+  if(!right) return; const o=office(); o.corrections[normalizeCite(input)]=right.trim(); o.shorthand[normalizeCite(input)]=right.trim(); saveOffice(o);
+  exR(input,document.getElementById('cd').value.trim());
+}
+
+/* ---- UI: denial letter ---- */
+let LAST_FOLDER=null;
+function exL(){document.getElementById('lt').value="NOTICE OF DENIAL. Your claim for the period of service beginning 03/14/2010 was denied under section 1862(a)(1)(A) of the Social Security Act (42 U.S.C. 1395y) on the ground that the items were not reasonable and necessary. Definitions at section 1861 apply. Your appeal rights are governed by section 1869 and 42 CFR 405.904. If you also receive disability benefits under section 223, those are unaffected.";document.getElementById('ld').value='2010-03-14';doLetter();}
+function doLetter(){
+  const text=document.getElementById('lt').value, dc=document.getElementById('ld').value.trim();
+  const out=document.getElementById('lOut');
+  if(!text.trim()){out.innerHTML='<div class="empty">Paste a denial letter above.</div>';return;}
+  const cites=extractCitations(text);
+  if(!cites.length){out.innerHTML='<div class="card"><div class="empty">No citations extracted. The text may use forms the v1 patterns miss — nothing is guessed. Add the citation manually in the Resolve tab.</div></div>';LAST_FOLDER=null;return;}
+  const resolved=cites.map(c=>resolveCitation(c));
+  LAST_FOLDER={dc,cites,resolved};
+  let items=resolved.map(r=>{
+    const id=r.usc?('42 U.S.C. § '+r.usc):(r.key||r.cfrKey||r.pl||r.input);
+    const ssa=r.ssa?`SSA § ${esc(r.ssa)} → `:'';
+    const head=r.found?esc(r.heading):(r.layer==='cfr'?'eCFR (wire index)':(r.layer==='pl'?'Public Law (wire index)':(r.layer==='ssa-unmapped'?'<span style="color:var(--oxblood)">unmapped SSA §</span>':'not in sample corpus')));
+    return `<div class="folder-item"><div class="fi-top"><span><span class="tag ssa">${ssa?esc('SSA '+r.ssa):'—'}</span> <span class="reskey" style="font-size:14px">${esc(id)}</span></span></div><div style="font-size:13px;margin-top:3px">${head}</div>${r.found?`<div class="excerpt">${esc(r.excerpt)}</div>`:''}</div>`;
+  }).join('');
+  out.innerHTML=`<div class="card"><h3>Matter authorities folder — ${cites.length} citation${cites.length>1?'s':''} extracted${dc?' · date of service '+esc(dc):''}</h3>${items}
+    ${dc?`<div class="muted-note">Date-of-conduct: ${dateCaveat(dc)}</div>`:''}
+    <div style="margin-top:12px"><button class="btn ghost" onclick="copyPrompt()">Copy shaped prompt for your AI →</button> <span class="muted-note">carries the verbatim sections + provenance; reason in your own tool.</span></div></div>`;
+}
+
+/* ---- shaped prompt export (carries caveat + verbatim sources) ---- */
+function buildPrompt(){
+  const f=LAST_FOLDER;
+  let secs='';
+  if(f && f.resolved){ f.resolved.forEach(r=>{ if(r.found) secs+=`\n--- ${r.ssa?('SSA § '+r.ssa+' = '):''}42 U.S.C. § ${r.usc||r.key.split(':')[1]} — ${r.heading} (corpus key ${r.key}, verbatim, SHA-manifested) ---\n${r.excerpt}\n`; }); }
+  return `You are assisting a paralegal. Below are VERBATIM primary-source sections from a signed legal corpus (Meridian North; reproducible, SHA-256 manifested).
+
+RULES YOU MUST FOLLOW:
+- The verbatim text below is the ONLY authority. Reason strictly from it.
+- Do NOT invent, paraphrase, or "recall" statutory text or citations. If something needed is not below, say so explicitly.
+- This is research assistance, NOT legal advice. Flag what the user should verify against the official source and what to bring to a licensed attorney.
+- Note that snapshot-year text is not exact-date text unless reconstructed; flag any date-of-conduct caveats.
+
+CONTEXT: ${f&&f.dc?('date of service '+f.dc+'. '):''}${f?(f.cites.length+' citation(s) from a denial letter.'):'(no folder built yet — paste a denial letter first)'}
+
+VERBATIM SECTIONS:${secs||'\n(none resolved in this corpus instance — note the gap)'}
+
+TASK: Help me identify the questions to ask, the elements at issue, and what is missing — grounded only in the text above.`;
+}
+function copyPrompt(){
+  const p=buildPrompt();
+  navigator.clipboard?.writeText(p).then(()=>flash('Shaped prompt copied — paste into your AI. Review for client info first.')).catch(()=>showPrompt(p));
+  if(!navigator.clipboard) showPrompt(p);
+}
+function showPrompt(p){const o=(document.querySelector('.panel.active').querySelector('[id$=Out]'))||document.getElementById('lOut');o.innerHTML+=`<div class="card"><h3>Shaped prompt (copy manually)</h3><textarea style="min-height:220px">${esc(p)}</textarea></div>`;}
+function flash(msg){const d=document.createElement('div');d.className='notice';d.style.position='fixed';d.style.bottom='16px';d.style.left='50%';d.style.transform='translateX(-50%)';d.style.zIndex=9;d.style.maxWidth='560px';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),4000);}
+
+/* ---- UI: office layer ---- */
+function addShorthand(){const k=document.getElementById('sk').value.trim(),v=document.getElementById('sv').value.trim();if(!k||!v)return;const o=office();o.shorthand[normalizeCite(k)]=v;saveOffice(o);document.getElementById('sk').value='';document.getElementById('sv').value='';renderOffice();}
+function renderOffice(){
+  const o=office(), out=document.getElementById('oOut');
+  const sh=Object.entries(o.shorthand), co=Object.entries(o.corrections);
+  out.innerHTML=`<div class="card"><h3>Learned shorthand (${sh.length})</h3>${sh.length?sh.map(([k,v])=>`<div class="dict-row"><span>${esc(k)}</span><span>→ ${esc(v)}</span></div>`).join(''):'<div class="empty">None yet. Teach a shorthand above, or correct a resolution in the Resolve tab.</div>'}
+    <div class="muted-note">Stored in this browser only (localStorage). Versioned + hashed for replay would live here in the appliance build. Export/clear: your data, your machine.</div>
+    <div style="margin-top:10px"><button class="btn ghost" onclick="clearOffice()">Clear office layer</button></div></div>`;
+}
+function clearOffice(){if(confirm('Clear all learned shorthand + corrections on this machine?')){localStorage.removeItem(OKEY);renderOffice();}}
+
+['ci','cd'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')doResolve();}));
+</script>
+</body>
+</html>

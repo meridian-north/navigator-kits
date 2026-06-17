@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>USC Deep-Time Section Growth — Meridian North</title>
+<style>
+  :root {
+    --bg: #0d1117; --surface: #161b22; --border: #30363d;
+    --gold: #f0a500; --green: #3fb950; --red: #f85149;
+    --blue: #58a6ff; --muted: #8b949e; --text: #e6edf3;
+    --t4: #7ee787; --t42: #58a6ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+
+  header { padding: 24px 32px 16px; border-bottom: 1px solid var(--border); }
+  header h1 { font-size: 20px; font-weight: 600; color: var(--gold); letter-spacing: 0.02em; }
+  header p { color: var(--muted); margin-top: 4px; font-size: 12px; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 20px 32px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .card.wide { grid-column: 1 / -1; }
+  .card h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 12px; }
+
+  /* Growth chart */
+  .growth-chart { position: relative; height: 180px; display: flex; align-items: flex-end; gap: 12px; padding-top: 24px; }
+  .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+  .bar-stack { width: 100%; display: flex; flex-direction: column-reverse; border-radius: 3px 3px 0 0; overflow: hidden; transition: all 0.6s ease; cursor: pointer; }
+  .bar-t4  { background: var(--t4); }
+  .bar-t42 { background: var(--t42); }
+  .bar-label { font-size: 11px; color: var(--muted); }
+  .bar-total { font-size: 12px; color: var(--text); font-weight: 600; }
+  .bar-stack:hover .bar-t42 { filter: brightness(1.2); }
+
+  /* Delta waterfall */
+  .waterfall { display: flex; gap: 10px; align-items: flex-end; height: 140px; padding-top: 20px; }
+  .wf-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .wf-label { font-size: 10px; color: var(--muted); text-align: center; }
+  .wf-bars { display: flex; gap: 3px; align-items: flex-end; height: 100px; }
+  .wf-bar { width: 20px; border-radius: 2px 2px 0 0; transition: height 0.5s ease; cursor: pointer; position: relative; }
+  .wf-bar.add { background: var(--green); }
+  .wf-bar.rem { background: var(--red); }
+  .wf-net { font-size: 11px; font-weight: 700; }
+  .wf-net.pos { color: var(--green); }
+  .wf-net.neg { color: var(--red); }
+
+  /* Lifecycle donut */
+  .lifecycle { display: flex; align-items: center; gap: 20px; }
+  svg.donut { overflow: visible; }
+  .legend-item { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 12px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Delta detail */
+  .delta-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .tab-btn { padding: 4px 12px; border-radius: 4px; border: 1px solid var(--border); background: transparent;
+             color: var(--muted); cursor: pointer; font-size: 11px; font-family: inherit; }
+  .tab-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(240,165,0,0.08); }
+  .delta-panel { display: none; }
+  .delta-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .delta-col h3 { font-size: 11px; margin-bottom: 8px; }
+  .delta-col h3.add { color: var(--green); }
+  .delta-col h3.rem { color: var(--red); }
+  .delta-row { padding: 5px 8px; border-radius: 4px; margin-bottom: 3px; font-size: 11px; line-height: 1.4; }
+  .delta-row.add { background: rgba(63,185,80,0.08); border-left: 2px solid var(--green); }
+  .delta-row.rem { background: rgba(248,81,73,0.08); border-left: 2px solid var(--red); }
+  .delta-row .key { color: var(--gold); font-size: 10px; }
+
+  /* Stats row */
+  .stats-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .stat { flex: 1; min-width: 100px; }
+  .stat .val { font-size: 24px; font-weight: 700; color: var(--gold); }
+  .stat .lbl { font-size: 10px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  footer { padding: 12px 32px; border-top: 1px solid var(--border); color: var(--muted); font-size: 10px; }
+  .sha { font-family: monospace; color: var(--border); }
+
+  .tooltip { position: fixed; background: #1c2128; border: 1px solid var(--border); border-radius: 6px;
+             padding: 8px 12px; font-size: 11px; pointer-events: none; opacity: 0; transition: opacity 0.15s;
+             z-index: 100; max-width: 240px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>USC Deep-Time Section Growth — Titles 4 &amp; 42</h1>
+  <p>Meridian North Legal Corpus · 5 editions · 1994–2018 · 27,017 section rows · corpus_version: deeptime_usc_all.csv</p>
+</header>
+
+<div class="grid">
+
+  <!-- Stats -->
+  <div class="card wide">
+    <div class="stats-row">
+      <div class="stat"><div class="val">5</div><div class="lbl">Editions indexed</div></div>
+      <div class="stat"><div class="val">27,017</div><div class="lbl">Section-rows</div></div>
+      <div class="stat"><div class="val">6,381</div><div class="lbl">Unique sections</div></div>
+      <div class="stat"><div class="val">4,316</div><div class="lbl">Persistent (all 5)</div></div>
+      <div class="stat"><div class="val">1,574</div><div class="lbl">Added post-1994</div></div>
+      <div class="stat"><div class="val">482</div><div class="lbl">Gone by 2018</div></div>
+      <div class="stat"><div class="val" style="color:var(--green)">+1,185</div><div class="lbl">Net growth '94→'18</div></div>
+    </div>
+  </div>
+
+  <!-- Growth chart -->
+  <div class="card">
+    <h2>Section Count by Edition</h2>
+    <div class="growth-chart" id="growthChart"></div>
+    <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;">
+      <span><span style="display:inline-block;width:10px;height:10px;background:var(--t42);border-radius:2px;margin-right:4px;"></span>Title 42</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:var(--t4);border-radius:2px;margin-right:4px;"></span>Title 4</span>
+    </div>
+  </div>
+
+  <!-- Lifecycle donut -->
+  <div class="card">
+    <h2>Section Lifecycle</h2>
+    <div class="lifecycle">
+      <svg class="donut" width="130" height="130" viewBox="0 0 130 130">
+        <circle cx="65" cy="65" r="50" fill="none" stroke="#30363d" stroke-width="22"/>
+        <circle id="arc-persistent" cx="65" cy="65" r="50" fill="none" stroke="#58a6ff" stroke-width="22"
+                stroke-dasharray="314.16" stroke-dashoffset="314.16" transform="rotate(-90 65 65)"
+                style="transition:stroke-dashoffset 1s ease"/>
+        <circle id="arc-late" cx="65" cy="65" r="50" fill="none" stroke="#3fb950" stroke-width="22"
+                stroke-dasharray="314.16" stroke-dashoffset="314.16" transform="rotate(-90 65 65)"
+                style="transition:stroke-dashoffset 1s ease 0.3s"/>
+        <circle id="arc-defunct" cx="65" cy="65" r="50" fill="none" stroke="#f85149" stroke-width="22"
+                stroke-dasharray="314.16" stroke-dashoffset="314.16" transform="rotate(-90 65 65)"
+                style="transition:stroke-dashoffset 1s ease 0.6s"/>
+        <text x="65" y="60" text-anchor="middle" fill="#e6edf3" font-size="18" font-weight="700" font-family="monospace">6,381</text>
+        <text x="65" y="76" text-anchor="middle" fill="#8b949e" font-size="10" font-family="monospace">unique §</text>
+      </svg>
+      <div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Persistent all 5 editions<br><span style="color:var(--blue);font-weight:700">4,316</span> <span style="color:var(--muted)">(67.6%)</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Added post-1994, still live<br><span style="color:var(--green);font-weight:700">1,574</span> <span style="color:var(--muted)">(24.7%)</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Gone by 2018<br><span style="color:var(--red);font-weight:700">482</span> <span style="color:var(--muted)">(7.6%)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Waterfall -->
+  <div class="card wide">
+    <h2>Edition-to-Edition Deltas</h2>
+    <div class="waterfall" id="waterfall"></div>
+  </div>
+
+  <!-- Delta detail -->
+  <div class="card wide">
+    <h2>Notable Section Changes by Period</h2>
+    <div class="delta-tabs" id="deltaTabs"></div>
+    <div id="deltaPanels"></div>
+  </div>
+
+</div>
+
+<footer>
+  <span>Meridian North Legal Corpus · deeptime_usc_all.csv · Titles 4 &amp; 42 · 1994–2018</span><br>
+  <span class="sha">SHA-256 attestation: see MANIFEST_SHA256.txt · caveat: indexed_presence_is_not_efficacy · correlation_is_not_causation · section_delta_is_not_legislative_intent</span>
+</footer>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+const DATA = {
+  growth: {"1994":4730,"2000":4985,"2006":5541,"2012":5846,"2018":5915},
+  byTitle: {
+    "1994":{"4":27,"42":4703},
+    "2000":{"4":47,"42":4938},
+    "2006":{"4":47,"42":5494},
+    "2012":{"4":47,"42":5799},
+    "2018":{"4":47,"42":5868}
+  },
+  deltas: [
+    {from:1994,to:2000,added:444,removed:196,stable:4502,net:248,
+     sample_added:[{key:"42:1001",heading:"Basic entitlement to benefits"},{key:"42:1002",heading:"Qualified individuals"},{key:"42:1003",heading:"Residence outside the United States"},{key:"42:1004",heading:"Disqualifications"},{key:"42:1005",heading:"Benefit amount"}],
+     sample_removed:[{key:"42:11211",heading:"Establishment"},{key:"42:11212",heading:"Functions"},{key:"42:11461",heading:"Establishment of program"},{key:"42:11462",heading:"Allocation of grants"},{key:"42:11463",heading:"Program requirements"}]},
+    {from:2000,to:2006,added:637,removed:78,stable:4868,net:559,
+     sample_added:[{key:"42:10421",heading:"Definitions"},{key:"42:10603d",heading:"Crime victims legal assistance grants"},{key:"42:10603e",heading:"Crime victims notification grants"},{key:"42:13389",heading:"Greenhouse gas intensity reducing strategies"},{key:"42:13557",heading:"Sense of Congress on risk assessments"}],
+     sample_removed:[{key:"42:11611",heading:"Report on Hague compliance"},{key:"42:12605",heading:"Process of approval of national service"},{key:"42:13013a",heading:"Report"},{key:"42:13263a",heading:"Alternative compliance"},{key:"42:13571",heading:"Purposes"}]},
+    {from:2006,to:2012,added:494,removed:189,stable:5316,net:305,
+     sample_added:[{key:"42:300gg-1",heading:"Guaranteed availability of coverage"},{key:"42:300gg-2",heading:"Guaranteed renewability of coverage"},{key:"42:18001",heading:"Immediate improvements in health care"},{key:"42:18011",heading:"Preservation of right to maintain existing coverage"},{key:"42:18021",heading:"Establishment of American Health Benefit Exchanges"}],
+     sample_removed:[{key:"42:300e-1",heading:"Requirements of health maintenance organizations"},{key:"42:300e-2",heading:"Grants and contracts"},{key:"42:300e-3",heading:"Loans and loan guarantees"},{key:"42:300e-4",heading:"Application requirements"},{key:"42:300e-5",heading:"Submittal of information"}]},
+    {from:2012,to:2018,added:117,removed:28,stable:5782,net:89,
+     sample_added:[{key:"42:18114",heading:"Access to therapies"},{key:"42:18115",heading:"Establishment of risk corridors"},{key:"42:18116",heading:"Nondiscrimination"},{key:"42:290bb-25g",heading:"Behavioral health integration"},{key:"42:300hh-11",heading:"National Health Security Strategy"}],
+     sample_removed:[{key:"42:18022",heading:"Essential health benefits requirements"},{key:"42:18023",heading:"Special rules"},{key:"42:18024",heading:"Related definitions"},{key:"42:18025",heading:"Relating to emergency department use"},{key:"42:18026",heading:"Transparency in coverage"}]}
+  ],
+  lifecycle: {persistent:4316, late_entrants:1574, defunct:482}
+};
+
+const tip = document.getElementById('tooltip');
+function showTip(e, html) {
+  tip.innerHTML = html; tip.style.opacity = 1;
+  tip.style.left = (e.clientX + 12) + 'px';
+  tip.style.top  = (e.clientY - 20) + 'px';
+}
+function hideTip() { tip.style.opacity = 0; }
+
+// --- Growth chart ---
+const years = ['1994','2000','2006','2012','2018'];
+const maxCount = Math.max(...years.map(y => DATA.growth[y]));
+const chartEl = document.getElementById('growthChart');
+years.forEach(y => {
+  const total = DATA.growth[y];
+  const t4  = DATA.byTitle[y]['4'];
+  const t42 = DATA.byTitle[y]['42'];
+  const heightPct = (total / maxCount) * 140;
+  const h4  = (t4  / total) * heightPct;
+  const h42 = (t42 / total) * heightPct;
+
+  const g = document.createElement('div');
+  g.className = 'bar-group';
+  g.innerHTML = `
+    <div class="bar-total">${total.toLocaleString()}</div>
+    <div class="bar-stack" style="height:${heightPct}px" title="${y}: ${total} sections">
+      <div class="bar-t4"  style="height:${h4}px"></div>
+      <div class="bar-t42" style="height:${h42}px"></div>
+    </div>
+    <div class="bar-label">${y}</div>`;
+  g.addEventListener('mousemove', e => showTip(e,
+    `<strong>${y}</strong><br>Total: ${total.toLocaleString()}<br>Title 4: ${t4}<br>Title 42: ${t42.toLocaleString()}`));
+  g.addEventListener('mouseleave', hideTip);
+  chartEl.appendChild(g);
+});
+
+// --- Waterfall ---
+const wfEl = document.getElementById('waterfall');
+const maxBar = Math.max(...DATA.deltas.map(d => Math.max(d.added, d.removed)));
+DATA.deltas.forEach(d => {
+  const addH = Math.round((d.added / maxBar) * 90);
+  const remH = Math.round((d.removed / maxBar) * 90);
+  const col = document.createElement('div');
+  col.className = 'wf-col';
+  col.innerHTML = `
+    <div class="wf-net ${d.net>=0?'pos':'neg'}">${d.net>=0?'+':''}${d.net}</div>
+    <div class="wf-bars">
+      <div class="wf-bar add" style="height:${addH}px" data-val="+${d.added} added"></div>
+      <div class="wf-bar rem" style="height:${remH}px" data-val="-${d.removed} removed"></div>
+    </div>
+    <div class="wf-label">${d.from}→${d.to}</div>`;
+  col.querySelectorAll('.wf-bar').forEach(b => {
+    b.addEventListener('mousemove', e => showTip(e, `<strong>${d.from}→${d.to}</strong><br>${b.dataset.val}<br>Stable: ${d.stable.toLocaleString()}`));
+    b.addEventListener('mouseleave', hideTip);
+  });
+  wfEl.appendChild(col);
+});
+
+// --- Delta detail tabs ---
+const tabsEl = document.getElementById('deltaTabs');
+const panelsEl = document.getElementById('deltaPanels');
+DATA.deltas.forEach((d, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'tab-btn' + (i===0?' active':'');
+  btn.textContent = `${d.from}→${d.to}  (+${d.added} / -${d.removed})`;
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.delta-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+i).classList.add('active');
+  });
+  tabsEl.appendChild(btn);
+
+  const panel = document.createElement('div');
+  panel.className = 'delta-panel' + (i===0?' active':'');
+  panel.id = 'panel-'+i;
+  const addRows = d.sample_added.map(s=>`<div class="delta-row add"><div class="key">${s.key}</div>${s.heading}</div>`).join('');
+  const remRows = d.sample_removed.map(s=>`<div class="delta-row rem"><div class="key">${s.key}</div>${s.heading}</div>`).join('');
+  panel.innerHTML = `
+    <div class="delta-col">
+      <h3 class="add">▲ Sample Added (${d.added} total)</h3>${addRows}
+    </div>
+    <div class="delta-col">
+      <h3 class="rem">▼ Sample Removed (${d.removed} total)</h3>${remRows}
+    </div>`;
+  panelsEl.appendChild(panel);
+});
+
+// --- Donut arcs ---
+const total = 6381;
+const circ = 314.16;
+const pPersist = DATA.lifecycle.persistent / total;
+const pLate    = DATA.lifecycle.late_entrants / total;
+const pDefunct = DATA.lifecycle.defunct / total;
+
+// stacked: persistent, then late, then defunct
+const off1 = circ * (1 - pPersist);
+const off2 = circ * (1 - pLate);
+const off3 = circ * (1 - pDefunct);
+
+// Each arc is full circle but clipped by dashoffset; rotate to stack
+const rotPersist = -90;
+const rotLate    = -90 + 360 * pPersist;
+const rotDefunct = -90 + 360 * (pPersist + pLate);
+
+setTimeout(() => {
+  const ap = document.getElementById('arc-persistent');
+  ap.style.strokeDashoffset = off1;
+  ap.setAttribute('transform', `rotate(${rotPersist} 65 65)`);
+
+  const al = document.getElementById('arc-late');
+  al.style.strokeDashoffset = off2;
+  al.setAttribute('transform', `rotate(${rotLate} 65 65)`);
+
+  const ad = document.getElementById('arc-defunct');
+  ad.style.strokeDashoffset = off3;
+  ad.setAttribute('transform', `rotate(${rotDefunct} 65 65)`);
+}, 200);
+</script>
+</body>
+</html>

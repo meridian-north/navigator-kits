@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>USC Section Time-Travel Query — Meridian North</title>
+<style>
+:root {
+  --bg:#0f1117; --surface:#161b22; --surface2:#1c2128; --border:#30363d;
+  --gold:#f0a500; --green:#3fb950; --red:#f85149; --blue:#58a6ff;
+  --muted:#8b949e; --text:#e6edf3; --why:#ffd700;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;}
+
+header{padding:16px 28px 12px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:4px;}
+.header-top{display:flex;align-items:baseline;gap:16px;}
+header h1{font-size:17px;font-weight:600;color:var(--gold);}
+header span{color:var(--muted);font-size:12px;}
+.header-tagline{font-size:11px;color:var(--muted);opacity:.7;letter-spacing:.02em;font-style:italic;}
+
+.search-bar{padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);}
+.search-row{display:flex;gap:10px;align-items:center;}
+input[type=text]{
+  flex:1;padding:9px 14px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:6px;color:var(--text);font-size:14px;outline:none;
+  transition:border-color .2s;font-family:inherit;
+}
+input[type=text]:focus{border-color:var(--gold);}
+input[type=text]::placeholder{color:var(--muted);}
+.search-btn{
+  padding:9px 18px;background:var(--gold);color:#000;border:none;
+  border-radius:6px;cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap;
+}
+.search-btn:hover{background:#ffd000;}
+
+.examples{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.examples span{color:var(--muted);font-size:12px;}
+.example-btn{
+  padding:3px 10px;border:1px solid var(--border);border-radius:12px;
+  background:transparent;color:var(--muted);cursor:pointer;font-size:11px;
+  font-family:inherit;transition:all .15s;
+}
+.example-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+.results{padding:20px 28px;}
+
+/* empty / loading states */
+.state-msg{text-align:center;padding:48px 0;color:var(--muted);font-size:13px;}
+.state-msg .big{font-size:32px;display:block;margin-bottom:8px;}
+
+/* result header */
+.result-header{margin-bottom:16px;}
+.result-key{font-size:20px;font-weight:700;color:var(--gold);font-family:monospace;}
+.result-heading{font-size:15px;color:var(--text);margin-top:4px;}
+.badges{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.badge{padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;}
+.badge.first{background:rgba(63,185,80,.15);border:1px solid var(--green);color:var(--green);}
+.badge.last{background:rgba(248,81,73,.12);border:1px solid var(--red);color:var(--red);}
+.badge.why{background:rgba(255,215,0,.12);border:1px solid var(--why);color:var(--why);}
+.badge.persist{background:rgba(88,166,255,.12);border:1px solid var(--blue);color:var(--blue);}
+.badge.gone{background:rgba(248,81,73,.12);border:1px solid var(--red);color:var(--red);}
+
+/* edition cards */
+.edition-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px;}
+.edition-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:12px;transition:border-color .2s;
+}
+.edition-card.present{border-color:var(--border);}
+.edition-card.absent{opacity:.35;border-style:dashed;}
+.edition-card.first-year{border-color:var(--green);}
+.edition-card.last-year{border-color:var(--red);}
+.edition-card.why-year{border-top:2px solid var(--why);}
+.edition-year{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.edition-pill{font-size:10px;padding:1px 6px;border-radius:8px;}
+.pill-added{background:rgba(63,185,80,.2);color:var(--green);}
+.pill-removed{background:rgba(248,81,73,.2);color:var(--red);}
+.pill-absent{background:rgba(139,148,158,.1);color:var(--muted);}
+.edition-heading{font-size:12px;color:var(--blue);margin-bottom:6px;font-weight:500;}
+.edition-excerpt{font-size:11px;color:var(--muted);line-height:1.6;max-height:120px;overflow:hidden;position:relative;}
+.edition-excerpt::after{content:'';position:absolute;bottom:0;left:0;right:0;height:24px;background:linear-gradient(transparent,var(--surface));}
+.edition-why{margin-top:6px;font-size:10px;color:var(--why);}
+.absent-label{font-size:12px;color:var(--muted);text-align:center;padding:20px 0;}
+
+/* compare bar */
+.compare-bar{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-top:12px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
+.compare-item{font-size:12px;}
+.compare-item .lbl{color:var(--muted);}
+.compare-item .val{color:var(--text);font-weight:600;font-family:monospace;}
+.compare-item .val.pos{color:var(--green);}
+.compare-item .val.neg{color:var(--red);}
+
+/* no result */
+.no-result{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center;color:var(--muted);}
+.no-result code{color:var(--gold);font-family:monospace;}
+
+/* similar results list */
+.similar{margin-top:16px;}
+.similar h3{font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;}
+.similar-list{display:flex;flex-direction:column;gap:4px;}
+.similar-row{
+  padding:8px 12px;background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  transition:border-color .15s;
+}
+.similar-row:hover{border-color:var(--gold);}
+.similar-key{font-family:monospace;color:var(--gold);font-size:12px;}
+.similar-heading{font-size:12px;color:var(--text);}
+.similar-years{font-size:11px;color:var(--muted);}
+
+footer{padding:12px 28px;border-top:1px solid var(--border);color:var(--muted);font-size:10px;margin-top:20px;}
+
+/* Landing panel */
+.landing-panel{max-width:1100px;margin:0 auto;padding:24px 0;}
+.lp-summary{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:16px 20px;margin-bottom:20px;}
+.lp-tag{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:6px;}
+.lp-summary p{font-size:13px;line-height:1.7;color:var(--muted);}
+.lp-summary strong{color:var(--text);}
+.lp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.lp-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 18px;}
+.lp-card-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;letter-spacing:.01em;}
+.lp-alert{background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.3);border-radius:6px;padding:8px 12px;font-size:11px;color:#f0a090;line-height:1.5;margin-bottom:10px;}
+.lp-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.lp-list li{font-size:12px;line-height:1.6;color:var(--muted);padding-left:14px;position:relative;}
+.lp-list li::before{content:'→';position:absolute;left:0;color:var(--gold);}
+.lp-list li strong{color:var(--text);}
+.lp-list li code{color:var(--gold);font-family:monospace;font-size:11px;}
+.lp-cta{text-align:center;color:var(--muted);font-size:12px;padding:8px;}
+
+/* Scoring explainer panel */
+.lp-score-panel{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:8px;padding:18px 22px;margin-bottom:20px;}
+.lp-score-title{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:12px;}
+.lp-score-body p{font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:14px;}
+.lp-score-flags{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.lp-flag{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;}
+.lp-flag-q{font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.lp-flag-a{font-size:11px;color:var(--muted);line-height:1.6;}
+.lp-score-result{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.lp-score-col{border-radius:6px;padding:12px 14px;}
+.lp-score-col.agree{background:rgba(63,185,80,.07);border:1px solid rgba(63,185,80,.25);}
+.lp-score-col.disagree{background:rgba(248,81,73,.07);border:1px solid rgba(248,81,73,.25);}
+.lp-score-col-title{font-size:12px;font-weight:700;margin-bottom:6px;}
+.lp-score-col.agree .lp-score-col-title{color:var(--green);}
+.lp-score-col.disagree .lp-score-col-title{color:var(--red);}
+.lp-score-col-body{font-size:11px;color:var(--muted);line-height:1.6;}
+.lp-score-col-body strong{color:var(--text);}
+.lp-score-note{font-size:11px;color:var(--muted);line-height:1.7;font-style:italic;}
+
+/* For Counsel panel */
+.lp-counsel-panel{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:18px 22px;margin-bottom:16px;}
+.lp-counsel-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:14px;letter-spacing:.03em;}
+.lp-counsel-points{display:flex;flex-direction:column;gap:12px;}
+.lp-counsel-point{display:flex;gap:14px;align-items:flex-start;}
+.lp-counsel-num{font-size:11px;font-weight:700;color:var(--gold);background:rgba(240,165,0,.12);border:1px solid rgba(240,165,0,.3);border-radius:4px;padding:2px 7px;white-space:nowrap;flex-shrink:0;margin-top:1px;}
+.lp-counsel-text{font-size:12px;line-height:1.7;color:var(--muted);}
+.lp-counsel-text strong{color:var(--text);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <h1>§ USC Time-Travel Query</h1>
+    <span>Titles 4 &amp; 42 · Editions 1994–2018 · Meridian North Legal Corpus</span>
+  </div>
+  <div class="header-tagline">Where allowed by law, we provide the tools to discover who, what, when, where, why, and how — in real time or last known state, based on network type.</div>
+</header>
+
+<div class="search-bar">
+  <div class="search-row">
+    <input type="text" id="queryInput" placeholder="Enter section number — e.g. 1395, 300gg, 18001, 11461 — or full key like 42:1395" autocomplete="off" />
+    <button class="search-btn" onclick="runQuery()">Look Up Section</button>
+  </div>
+  <div class="examples">
+    <span>Try:</span>
+    <button class="example-btn" onclick="demo('42:1395')">42:1395 Medicare</button>
+    <button class="example-btn" onclick="demo('42:18001')">42:18001 ACA §1001</button>
+    <button class="example-btn" onclick="demo('42:300gg')">42:300gg Coverage guarantee</button>
+    <button class="example-btn" onclick="demo('42:11461')">42:11461 Repealed homeless grant</button>
+    <button class="example-btn" onclick="demo('42:247d')">42:247d Public health emergencies</button>
+    <button class="example-btn" onclick="demo('4:1')">4:1 US Flag</button>
+  </div>
+</div>
+
+<div class="results" id="results">
+  <div class="landing-panel">
+
+    <div class="lp-summary">
+      <div class="lp-tag">What this is</div>
+      <p>A time-travel lookup engine for US statutory text. Every result is verbatim primary source — no model-generated summary, no inference, no paraphrase. The text you see is the text Congress enacted, in the edition year you select, SHA-256 verified against the source PDF.</p>
+    </div>
+
+    <div class="lp-grid">
+
+      <div class="lp-card">
+        <div class="lp-card-title">⚖ Why lawyers use this</div>
+        <ul class="lp-list">
+          <li><strong>Date-of-conduct statutory text.</strong> "What did §42:300gg say on the date my client acted?" is the foundational liability question. Westlaw charges premium rates for historical versioning. This answers it in seconds, free.</li>
+          <li><strong>Repeal defense.</strong> If a section was removed before your client's conduct, there is no statutory duty. See exactly when any section disappeared from the code.</li>
+          <li><strong>ACA onset.</strong> §42:18001 et seq. first appear in the 2012 edition. Pre-2012 conduct has no ACA exposure. Verifiable here in one lookup.</li>
+          <li><strong>Congressional intent — first class.</strong> Enacted findings (the "★ Congressional findings" flag) are Congress's own stated purpose, embedded in the statute. Courts treat this as primary evidence of legislative intent. No legislative history database required.</li>
+          <li><strong>Edition-to-edition text drift.</strong> The character-count compare bar shows when a section was substantially rewritten — a signal to read the diff carefully before citing.</li>
+        </ul>
+      </div>
+
+      <div class="lp-card">
+        <div class="lp-card-title">🛡 How this avoids the sanctions risk</div>
+        <div class="lp-alert">
+          Rule 11 &amp; Rule 3.3 exposure from AI-generated legal research is real. Courts have already sanctioned attorneys for citing hallucinated cases.
+        </div>
+        <ul class="lp-list">
+          <li><strong>No LLM in the result path.</strong> What you see is the exact text extracted from the official govinfo.gov PDF for that edition year. No model touched it. No summary was generated. The text is the text.</li>
+          <li><strong>SHA-256 provenance chain.</strong> Every corpus release ships a <code>MANIFEST_SHA256.txt</code>. The hash of the source PDF that produced this text is recorded. You can verify it against the live govinfo.gov file — a reproducible chain of custody you can show your work with. (For filing, always cite and verify against the official USC.)</li>
+          <li><strong>Caveats are schema fields, not footnotes.</strong> The footer caveat travels with every export: <em>snapshot_year_is_not_enactment_date</em>. This is accurate — use official USC for filing. This tool is your research compass, not your citation.</li>
+          <li><strong>Absence is documented.</strong> If a section is not in the corpus, the tool says so explicitly. It does not hallucinate a result. A blank card means not indexed — not "not law."</li>
+        </ul>
+      </div>
+
+      <div class="lp-card">
+        <div class="lp-card-title">🔍 What you can look up</div>
+        <ul class="lp-list">
+          <li>Any section of <strong>USC Title 42</strong> (Public Health &amp; Welfare — Medicare, Medicaid, ACA, PHSA, PREP Act, environmental programs)</li>
+          <li>Any section of <strong>USC Title 4</strong> (Flag, Seal, Seat of Government, States)</li>
+          <li>Five edition snapshots: <strong>1994 · 2000 · 2006 · 2012 · 2018</strong></li>
+          <li>6,381 unique sections · 27,017 section-rows · 4,316 sections persistent across all 5 editions</li>
+          <li>Congressional findings (proclaimed WHY) flagged inline where present in statutory text</li>
+        </ul>
+      </div>
+
+      <div class="lp-card">
+        <div class="lp-card-title">📡 What is coming</div>
+        <ul class="lp-list">
+          <li><strong>Case law corpus</strong> — Harvard Caselaw Access Project (6.7M published US cases) + CourtListener real-time federal opinions. Every lookup by a mesh participant attests the case permanently.</li>
+          <li><strong>Full USC</strong> — all titles, not just 4 &amp; 42</li>
+          <li><strong>CFR cross-reference</strong> — regulatory implementation alongside statutory text (Title 40 NCP already indexed)</li>
+          <li><strong>Statutes at Large</strong> — the enacted text behind the code, with session law citations</li>
+          <li><strong>Enactment-date precision</strong> — snapshot year → actual effective date resolution</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="lp-counsel-panel">
+      <div class="lp-counsel-title">⚖ For Counsel — three things to know before the demo</div>
+      <div class="lp-counsel-points">
+        <div class="lp-counsel-point">
+          <span class="lp-counsel-num">I</span>
+          <div class="lp-counsel-text"><strong>The sources are the sources.</strong> This corpus is built from primary sources — official USC editions published by the Office of Law Revision Counsel, the U.S. Statutes at Large, and Harvard Law School's Caselaw Access Project (~1.8M federal opinions). The AI does not generate law. It indexes law that already existed and makes it queryable across five decades. Every record links back to its authoritative origin.</div>
+        </div>
+        <div class="lp-counsel-point">
+          <span class="lp-counsel-num">II</span>
+          <div class="lp-counsel-text"><strong>"Milspec" means reproducible under adversarial conditions.</strong> Every query result is tied to a SHA-256-verified corpus snapshot. The same query against the same snapshot always returns the same result — the way a certified copy of a transcript is the same as the original. If this system's output were ever needed in a proceeding, the exact corpus version, the exact model weights, and the exact inputs can be produced and re-run by opposing counsel on their own hardware.</div>
+        </div>
+        <div class="lp-counsel-point">
+          <span class="lp-counsel-num">III</span>
+          <div class="lp-counsel-text"><strong>BitNet is deterministic.</strong> The 2-billion-parameter model scoring this corpus is weight-attested — its parameters are hash-pinned at a specific version. Deterministic inference means: same model + same input + same seed = identical output, every time, by anyone. It is not a black box. It is a signed, reproducible calculation. The 72-billion-parameter cross-check (Qwen) confirms or disputes each score — disagreements are the finding, not an error.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lp-score-panel">
+      <div class="lp-score-title">🧠 How the corpus audits itself — the two-model disagreement surface</div>
+      <div class="lp-score-body">
+        <p>Every section in this corpus is independently scored by two AI models from different architectural families — a 2-billion-parameter military-spec model (BitNet) and a 72-billion-parameter general model (Qwen). They score each section on the same two questions:</p>
+        <div class="lp-score-flags">
+          <div class="lp-flag">
+            <div class="lp-flag-q">★ Does this section contain a proclaimed WHY?</div>
+            <div class="lp-flag-a">Congressional findings, purpose clauses, legislative intent statements embedded in the statute itself. Courts treat this as primary evidence of legislative intent — no legislative history database required.</div>
+          </div>
+          <div class="lp-flag">
+            <div class="lp-flag-q">⚡ Is this section's operative status honestly classifiable?</div>
+            <div class="lp-flag-a">Is it clearly operative, clearly repealed, or genuinely ambiguous from the text alone? Some sections are zombies — technically on the books but functionally hollow. Others are contested territory.</div>
+          </div>
+        </div>
+        <div class="lp-score-result">
+          <div class="lp-score-col agree">
+            <div class="lp-score-col-title">Both models agree</div>
+            <div class="lp-score-col-body">Corroborated verdict. High confidence. Green signal in the corpus — use with normal legal judgment.</div>
+          </div>
+          <div class="lp-score-col disagree">
+            <div class="lp-score-col-title">Models disagree</div>
+            <div class="lp-score-col-body">This IS the finding. The section is in the ambiguity surface — the territory where even independent AI systems cannot resolve the question. <strong>That is exactly where human legal judgment matters most.</strong> The corpus flags it rather than hiding it.</div>
+          </div>
+        </div>
+        <p class="lp-score-note">This is not AI replacing legal judgment. It is AI mapping the edges of legal certainty — so you know which sections reward a second read and which are settled ground. The disagreement surface is currently being computed across all 2,500 section-slots (500 per edition × 5 editions). Results populate as the cross-check run completes.</p>
+      </div>
+    </div>
+
+    <div class="lp-cta">Enter a section number above — or click an example to see a live result.</div>
+  </div>
+</div>
+
+<footer>
+  Meridian North Legal Corpus · USC Titles 4 &amp; 42 · 5 editions 1994–2018 · 6,381 unique sections · 27,017 section-rows<br>
+  caveat: snapshot_year_is_not_enactment_date · indexed_presence_is_not_legal_advice · verify against official USC for litigation use
+</footer>
+
+<script>
+const YEARS = ['1994','2000','2006','2012','2018'];
+let DB = null;
+
+// Load the compact JSON
+fetch('usc_section_lookup.json')
+  .then(r => r.json())
+  .then(d => { DB = d; })
+  .catch(() => {
+    // fallback: try embedded or show error
+    document.getElementById('results').innerHTML =
+      '<div class="state-msg"><span class="big">⚠</span>The full corpus index is loading or unavailable.<br><span style="font-size:11px">This lookup needs its data file (usc_section_lookup.json) alongside the page. If you opened this from your computer, view it on the hosted site instead.</span></div>';
+  });
+
+document.getElementById('queryInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runQuery();
+});
+
+function demo(key) {
+  document.getElementById('queryInput').value = key;
+  runQuery();
+}
+
+function runQuery() {
+  if (!DB) { alert('Corpus loading... try again in a moment.'); return; }
+  const raw = document.getElementById('queryInput').value.trim();
+  if (!raw) return;
+
+  // Normalize input
+  let keys = resolveKeys(raw);
+  if (!keys.length) {
+    showNoResult(raw);
+    return;
+  }
+  if (keys.length === 1) {
+    showSection(keys[0]);
+  } else {
+    showSimilar(raw, keys);
+  }
+}
+
+function resolveKeys(raw) {
+  // Exact match first
+  if (DB[raw]) return [raw];
+
+  // Try with title prefix
+  const withT42 = '42:' + raw;
+  const withT4  = '4:'  + raw;
+  if (DB[withT42]) return [withT42];
+  if (DB[withT4])  return [withT4];
+
+  // Fuzzy: find all keys containing the search string
+  const matches = Object.keys(DB).filter(k => {
+    const d = DB[k];
+    const num = raw.replace(/^42:/,'').replace(/^4:/,'');
+    return k.includes(num) ||
+           Object.values(YEARS).some(y => d[y] && d[y].h && d[y].h.toLowerCase().includes(raw.toLowerCase()));
+  });
+  return matches.slice(0, 20);
+}
+
+function showSection(key) {
+  const d = DB[key];
+  const presentYears = YEARS.filter(y => d[y]);
+  const absentYears  = YEARS.filter(y => !d[y]);
+  const firstYear = d['_f'];
+  const lastYear  = d['_l'];
+  const isGone    = lastYear !== '2018';
+  const isPersist = presentYears.length === 5;
+  const hasWhy    = presentYears.some(y => d[y] && d[y].w);
+  const heading   = presentYears.map(y => d[y].h).find(h => h) || '';
+
+  // Build badges
+  let badges = '';
+  if (firstYear !== '1994') badges += `<span class="badge first">▲ Entered ${firstYear}</span>`;
+  if (isGone) badges += `<span class="badge gone">▼ Gone after ${lastYear}</span>`;
+  if (isPersist) badges += `<span class="badge persist">◆ Persistent all 5 editions</span>`;
+  if (hasWhy) badges += `<span class="badge why">★ Congressional findings present</span>`;
+
+  // Edition cards
+  let cards = '';
+  YEARS.forEach((y, i) => {
+    const prev = i > 0 ? YEARS[i-1] : null;
+    const isPresent = !!d[y];
+    const wasPresent = prev ? !!d[prev] : false;
+    const isFirst = y === firstYear && firstYear !== '1994';
+    const isLast  = y === lastYear  && isGone && prev && wasPresent && !isPresent;
+    const hasWhy  = isPresent && d[y].w;
+
+    let pill = '';
+    if (isPresent && prev && !d[prev]) pill = '<span class="edition-pill pill-added">+ Added</span>';
+    if (!isPresent && prev && d[prev]) pill = '<span class="edition-pill pill-removed">− Removed</span>';
+    if (!isPresent && !prev)           pill = '<span class="edition-pill pill-absent">Not present</span>';
+
+    let cls = isPresent ? 'edition-card present' : 'edition-card absent';
+    if (y === firstYear && firstYear !== '1994') cls += ' first-year';
+    if (y === lastYear && isGone && !isPresent)  cls += ' last-year'; // card before removal
+    if (hasWhy) cls += ' why-year';
+
+    if (isPresent) {
+      const row = d[y];
+      cards += `<div class="${cls}">
+        <div class="edition-year">${y} ${pill}</div>
+        <div class="edition-heading">${row.h || '—'}</div>
+        <div class="edition-excerpt">${row.e || '(no excerpt)'}</div>
+        ${row.w ? '<div class="edition-why">★ Congressional findings</div>' : ''}
+      </div>`;
+    } else {
+      cards += `<div class="${cls}">
+        <div class="edition-year">${y} ${pill}</div>
+        <div class="absent-label">Not in this edition</div>
+      </div>`;
+    }
+  });
+
+  // Compare bar
+  const charCounts = YEARS.filter(y=>d[y]).map(y => ({y, c: d[y].e ? d[y].e.length : 0}));
+  const compareItems = charCounts.map((cc,i) => {
+    if (i === 0) return `<div class="compare-item"><div class="lbl">${cc.y} text size</div><div class="val">${cc.c} ch</div></div>`;
+    const prev = charCounts[i-1];
+    const delta = cc.c - prev.c;
+    const cls = delta > 20 ? 'pos' : delta < -20 ? 'neg' : '';
+    const sign = delta >= 0 ? '+' : '';
+    return `<div class="compare-item"><div class="lbl">${prev.y}→${cc.y}</div><div class="val ${cls}">${sign}${delta} ch</div></div>`;
+  }).join('');
+
+  document.getElementById('results').innerHTML = `
+    <div class="result-header">
+      <div class="result-key">§ ${key}</div>
+      <div class="result-heading">${heading}</div>
+      <div class="badges">${badges}</div>
+    </div>
+    <div class="edition-grid">${cards}</div>
+    <div class="compare-bar">${compareItems}
+      <div class="compare-item" style="margin-left:auto">
+        <div class="lbl">Editions present</div>
+        <div class="val">${presentYears.length} / 5</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--muted)">
+      ⚠ caveat: snapshot_year_is_not_enactment_date · verify against official USC for litigation use
+    </div>`;
+}
+
+function showSimilar(raw, keys) {
+  const rows = keys.map(k => {
+    const d = DB[k];
+    const heading = YEARS.map(y => d[y]?.h).find(h=>h) || '';
+    const yrs = YEARS.filter(y=>d[y]).join(' ');
+    return `<div class="similar-row" onclick="showSection('${k}')">
+      <div>
+        <span class="similar-key">§ ${k}</span>
+        <span class="similar-heading" style="margin-left:10px">${heading.slice(0,60)}</span>
+      </div>
+      <div class="similar-years">${yrs}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('results').innerHTML = `
+    <div class="similar">
+      <h3>${keys.length} sections match "${raw}" — click to open</h3>
+      <div class="similar-list">${rows}</div>
+    </div>`;
+}
+
+function showNoResult(raw) {
+  document.getElementById('results').innerHTML = `
+    <div class="no-result">
+      <div style="font-size:18px;margin-bottom:8px">§ <code>${raw}</code> — not found in corpus</div>
+      <div style="font-size:12px;color:var(--muted)">
+        Corpus covers USC Titles 4 &amp; 42 only, editions 1994–2018.<br>
+        Try a different section number, or check the title prefix (e.g. <code>42:1395</code>).
+      </div>
+    </div>`;
+}
+</script>
+
+</body>
+</html>

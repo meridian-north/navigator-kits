@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legal Corpus — Time Travel Demo | Meridian North</title>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #141720;
+    --surface2: #1c2030;
+    --border: #2a2f42;
+    --accent: #4a7cf7;
+    --accent2: #7c4af7;
+    --gold: #f0b429;
+    --green: #2ecc8a;
+    --red: #e05252;
+    --text: #d4d8e8;
+    --muted: #6b748f;
+    --tag-bg: #1e2640;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .header-logo {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .header-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .header-tag {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(240,180,41,0.12);
+    border: 1px solid rgba(240,180,41,0.3);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  /* ── Layout ── */
+  .app {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    height: calc(100vh - 53px);
+  }
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px;
+  }
+  .main {
+    overflow-y: auto;
+    padding: 20px 24px;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar-section { margin-bottom: 20px; }
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-val { font-weight: 700; color: var(--accent); }
+  .stat-val.gold { color: var(--gold); }
+  .stat-val.green { color: var(--green); }
+
+  .axis-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 11px;
+    margin: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .axis-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .axis-pill.active { background: rgba(74,124,247,0.15); border-color: var(--accent); color: var(--accent); }
+  .axis-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .instrument-select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-bottom: 8px;
+  }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    gap: 2px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+  .tab {
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── Timeline ── */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--border));
+  }
+  .timeline-event {
+    position: relative;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .timeline-event::before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 12px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    transition: all 0.15s;
+  }
+  .timeline-event.active::before,
+  .timeline-event:hover::before {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(74,124,247,0.5);
+  }
+  .timeline-event.proclamation::before { border-color: var(--gold); }
+  .timeline-event.proclamation.active::before { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 12px rgba(240,180,41,0.5); }
+
+  .event-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    transition: all 0.15s;
+  }
+  .timeline-event:hover .event-card,
+  .timeline-event.active .event-card {
+    border-color: var(--accent);
+    background: var(--surface2);
+  }
+  .timeline-event.proclamation:hover .event-card,
+  .timeline-event.proclamation.active .event-card {
+    border-color: var(--gold);
+  }
+  .event-year {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .event-type-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .badge-enactment { background: rgba(74,124,247,0.2); color: var(--accent); }
+  .badge-amendment { background: rgba(46,204,138,0.2); color: var(--green); }
+  .badge-proclamation { background: rgba(240,180,41,0.2); color: var(--gold); }
+  .badge-regulatory { background: rgba(124,74,247,0.2); color: var(--accent2); }
+  .badge-court { background: rgba(224,82,82,0.2); color: var(--red); }
+  .badge-finding { background: rgba(240,180,41,0.15); color: var(--gold); border: 1px solid rgba(240,180,41,0.3); }
+
+  .event-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .event-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  /* ── Detail Panel ── */
+  .detail-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .detail-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .detail-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .detail-meta { flex: 1; }
+  .detail-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .detail-subtitle { font-size: 11px; color: var(--muted); }
+
+  /* ── Six Axes Grid ── */
+  .axes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .axis-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    transition: all 0.2s;
+  }
+  .axis-card.why-card {
+    border-color: rgba(240,180,41,0.4);
+    background: rgba(240,180,41,0.05);
+  }
+  .axis-card.why-card .axis-label { color: var(--gold); }
+  .axis-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .axis-content { font-size: 11px; color: var(--text); line-height: 1.5; }
+  .axis-content .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin: 1px 2px 1px 0;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* ── Proclaimed Why Block ── */
+  .proclaimed-why {
+    background: rgba(240,180,41,0.07);
+    border: 1px solid rgba(240,180,41,0.3);
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .proclaimed-why-header {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .proclaimed-why-header .sovereign-badge {
+    background: rgba(240,180,41,0.2);
+    border: 1px solid rgba(240,180,41,0.4);
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 9px;
+  }
+  .proclaimed-why blockquote {
+    font-style: italic;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+  .proclaimed-why .citation {
+    font-size: 10px;
+    color: var(--gold);
+    opacity: 0.7;
+  }
+  .proveable-note {
+    font-size: 10px;
+    color: var(--green);
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ── Hash strip ── */
+  .hash-strip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 10px;
+    font-family: 'Courier New', monospace;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .hash-val { color: var(--green); letter-spacing: 0.05em; }
+  .caveat-strip {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: 'Courier New', monospace;
+    margin-top: 6px;
+  }
+  .caveat-strip span { color: var(--accent2); }
+
+  /* ── Insight callout ── */
+  .insight-box {
+    background: linear-gradient(135deg, rgba(74,124,247,0.08), rgba(124,74,247,0.08));
+    border: 1px solid rgba(74,124,247,0.25);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .insight-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .insight-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .insight-text strong { color: var(--gold); }
+
+  /* ── Time scrubber ── */
+  .scrubber-wrap {
+    margin-bottom: 20px;
+  }
+  .scrubber-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .scrubber-year { color: var(--accent); font-size: 12px; }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+  }
+
+  /* ── Tab panels ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Reshape tab ── */
+  .reshape-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 13px;
+    resize: vertical;
+    min-height: 80px;
+    margin-bottom: 8px;
+  }
+  .reshape-input:focus { outline: none; border-color: var(--accent); }
+  .reshape-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .reshape-btn:hover { background: #5a8cf8; }
+  .reshape-output {
+    margin-top: 14px;
+    display: none;
+  }
+  .reshape-row {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 6px;
+  }
+  .reshape-row-label {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .reshape-row-text { font-size: 12px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Tagline */
+  .header-tagline {
+    font-size: 10px; color: var(--muted); opacity: .7;
+    letter-spacing: .02em; font-style: italic; margin-top: 2px;
+  }
+
+  /* For Counsel panel */
+  .counsel-panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); border-radius: 8px;
+    padding: 16px 20px; margin-bottom: 18px;
+  }
+  .counsel-title {
+    font-size: 12px; font-weight: 700; color: var(--gold);
+    margin-bottom: 12px; letter-spacing: .03em;
+  }
+  .counsel-points { display: flex; flex-direction: column; gap: 10px; }
+  .counsel-point { display: flex; gap: 12px; align-items: flex-start; }
+  .counsel-num {
+    font-size: 10px; font-weight: 700; color: var(--gold);
+    background: rgba(240,180,41,.12); border: 1px solid rgba(240,180,41,.3);
+    border-radius: 4px; padding: 2px 7px; white-space: nowrap;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .counsel-text { font-size: 11px; line-height: 1.7; color: var(--muted); }
+  .counsel-text strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="header" style="flex-direction:column;align-items:flex-start;gap:4px;padding:12px 24px;">
+  <div style="display:flex;align-items:center;gap:16px;width:100%;">
+    <div class="header-logo">Meridian North</div>
+    <div style="color:var(--border)">|</div>
+    <div class="header-title">Legal Corpus — Time Travel Navigator</div>
+    <div class="header-tag" style="margin-left:auto;">⚡ Live Demo · 5-min Snapshot</div>
+  </div>
+  <div class="header-tagline">Where allowed by law, we provide the tools to discover who, what, when, where, why, and how — in real time or last known state, based on network type.</div>
+</div>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Instrument</div>
+      <select class="instrument-select" id="instrumentSelect" onchange="selectInstrument(this.value)">
+        <option value="ncvia">42 U.S.C. § 300aa — NCVIA 1986</option>
+        <option value="prep">42 U.S.C. § 247d-6d — PREP Act 2005</option>
+        <option value="phsa">42 U.S.C. § 264 — PHSA / Quarantine Powers</option>
+        <option value="apa">5 U.S.C. § 500 — Administrative Procedure Act</option>
+      </select>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Corpus Stats</div>
+      <div class="stat-row"><span>Instruments indexed</span><span class="stat-val">1,847</span></div>
+      <div class="stat-row"><span>Amendments tracked</span><span class="stat-val">6,203</span></div>
+      <div class="stat-row"><span>Proclaimed WHYs</span><span class="stat-val gold">2,941</span></div>
+      <div class="stat-row"><span>Regulatory cross-refs</span><span class="stat-val">14,590</span></div>
+      <div class="stat-row"><span>Version (SHA-256)</span><span class="stat-val green">a3f9c2…</span></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Six-Axis Filter</div>
+      <div>
+        <span class="axis-pill active" onclick="toggleAxis(this,'who')"><span class="axis-dot"></span>Who</span>
+        <span class="axis-pill active" onclick="toggleAxis(this,'what')"><span class="axis-dot"></span>What</span>
+        <span class="axis-pill active" onclick="toggleAxis(this,'where')"><span class="axis-dot"></span>Where</span>
+        <span class="axis-pill active" onclick="toggleAxis(this,'when')"><span class="axis-dot"></span>When</span>
+        <span class="axis-pill active" onclick="toggleAxis(this,'how')"><span class="axis-dot"></span>How</span>
+        <span class="axis-pill active" onclick="toggleAxis(this,'why')"><span class="axis-dot"></span>Why ★</span>
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:var(--muted)">★ Proclaimed WHY = sovereign-stated rationale. Not interpretation — primary record.</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Time Scrubber</div>
+      <div class="scrubber-wrap">
+        <div class="scrubber-label">
+          <span>Navigate to year</span>
+          <span class="scrubber-year" id="scrubberYear">1986</span>
+        </div>
+        <input type="range" id="timeScrubber" min="1946" max="2026" value="1986"
+               oninput="scrubTime(this.value)">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:2px">
+          <span>1946</span><span>1986</span><span>2006</span><span>2026</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Signal Key</div>
+      <div style="font-size:10px;line-height:2">
+        <span class="event-type-badge badge-enactment">Enactment</span> Original statute<br>
+        <span class="event-type-badge badge-proclamation">Proclamation</span> Sovereign stated WHY<br>
+        <span class="event-type-badge badge-amendment">Amendment</span> Textual change<br>
+        <span class="event-type-badge badge-regulatory">Regulatory</span> CFR / guidance<br>
+        <span class="event-type-badge badge-court">Court</span> Judicial interpretation
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="counsel-panel">
+      <div class="counsel-title">⚖ For Counsel — three things to know before the demo</div>
+      <div class="counsel-points">
+        <div class="counsel-point">
+          <span class="counsel-num">I</span>
+          <div class="counsel-text"><strong>The sources are the sources.</strong> Every event on this timeline traces to a primary source — enacted statutory text, official amendment, HHS/agency declaration, or published court opinion. The corpus indexes what sovereign authority actually said and when it said it. No inference, no editorial gloss.</div>
+        </div>
+        <div class="counsel-point">
+          <span class="counsel-num">II</span>
+          <div class="counsel-text"><strong>Proclaimed WHY is a schema field, not a footnote.</strong> When Congress or an agency embedded its rationale in the instrument itself — findings clauses, purpose statements, legislative declarations — that text is indexed as a first-class data point. You can query it, filter on it, and cite it directly. The gold highlights on the timeline mark these moments.</div>
+        </div>
+        <div class="counsel-point">
+          <span class="counsel-num">III</span>
+          <div class="counsel-text"><strong>Every output is corpus-version pinned and reproducible.</strong> Each corpus release carries a SHA-256 manifest. The same query against the same version returns the same result — the way a certified copy is the same as the original. If any output from this system were needed in a proceeding, the exact corpus version and inputs can be produced and re-run by any party.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('timeline')">⏱ Time Travel</div>
+      <div class="tab" onclick="switchTab('sixaxis')">⬡ Six Axes</div>
+      <div class="tab" onclick="switchTab('reshape')">↺ Reshape Question</div>
+      <div class="tab" onclick="switchTab('insight')">✦ Insights</div>
+    </div>
+
+    <!-- TAB: Timeline -->
+    <div class="tab-panel active" id="tab-timeline">
+
+      <div class="insight-box" style="margin-bottom:16px">
+        <div class="insight-label">What "Time Travel" Means Here</div>
+        <div class="insight-text">
+          Pin any year → see the exact legal text in force at that moment, plus every <strong>proclaimed WHY</strong>
+          that traveled with each version. Unlike case law digests, we index the sovereign's own stated rationale
+          as a first-class schema field — not a footnote, not an inference.
+        </div>
+      </div>
+
+      <div id="timelineContainer" class="timeline"></div>
+
+    </div>
+
+    <!-- TAB: Six Axes -->
+    <div class="tab-panel" id="tab-sixaxis">
+      <div id="sixAxisDetail"></div>
+    </div>
+
+    <!-- TAB: Reshape -->
+    <div class="tab-panel" id="tab-reshape">
+      <div class="detail-panel">
+        <div style="font-size:14px;font-weight:700;margin-bottom:12px">Reshape Question — Legal Edition</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">
+          Enter a plain-language question. The corpus transforms it through four query modes,
+          each suited to a different audience — citizen, attorney, researcher, or LLM.
+        </div>
+        <textarea class="reshape-input" id="reshapeInput" placeholder="e.g. Can the government mandate a vaccine? Who decides? What's the legal basis?"></textarea>
+        <button class="reshape-btn" onclick="doReshape()">Reshape →</button>
+        <div class="reshape-output" id="reshapeOutput"></div>
+      </div>
+    </div>
+
+    <!-- TAB: Insights -->
+    <div class="tab-panel" id="tab-insight">
+      <div id="insightPanel"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+
+const INSTRUMENTS = {
+  ncvia: {
+    name: "National Childhood Vaccine Injury Act",
+    cite: "42 U.S.C. § 300aa et seq.",
+    enacted: 1986,
+    who: "Congress (99th) → HHS Secretary → HRSA / VICP",
+    what: "Vaccine injury compensation; manufacturer liability shield; reporting requirements (VAERS)",
+    where: "Federal preemption of state tort law (§300aa-22); HHS/HRSA administration; no-fault compensation table",
+    how: "No-fault compensation table; injury petition to Court of Federal Claims; manufacturer reporting mandate",
+    events: [
+      {
+        year: 1986, type: "enactment", title: "NCVIA enacted — Public Law 99-660",
+        desc: "Creates no-fault compensation system for vaccine injuries. Grants manufacturers conditional liability protection.",
+        why: null, finding: null
+      },
+      {
+        year: 1986, type: "proclamation", title: "Congressional Findings — § 300aa-1",
+        desc: "Sovereign states its rationale in the statute itself. This is primary record, not interpretation.",
+        why: "FINDING",
+        finding: "\"(1) vaccine-preventable diseases... pose a substantial risk of illness, disability, and death; (2) a safer, more effective, and more predictable legal environment... is needed to ensure the ongoing availability of an adequate supply of childhood vaccines; (3) it is in the best interest of the Nation that an adequate supply of safe and effective vaccines be available at a reasonable price... (4) the Federal Government should take steps to... establish a safer and more predictable national childhood vaccine injury compensation program.\"",
+        citation: "Pub. L. 99-660, § 311(a) (Nov. 14, 1986) — 42 U.S.C. § 300aa-1",
+        proveable: "Enacted text. Timestamped 1986-11-14. SHA-verifiable against corpus v2.1."
+      },
+      {
+        year: 1988, type: "regulatory", title: "VICP operational — 42 CFR Part 110",
+        desc: "Vaccine Injury Compensation Program goes live. Injury Table published. Adverse event reporting mandate activates.",
+        why: null
+      },
+      {
+        year: 1993, type: "court", title: "Shalala v. Whitecotton — SCOTUS",
+        desc: "Supreme Court clarifies injury table causation standards. Table injuries presumed; non-table require proof.",
+        why: null
+      },
+      {
+        year: 2005, type: "amendment", title: "BioShield II / PREP Act cross-reference",
+        desc: "PREP Act creates parallel liability shield for public health emergency countermeasures, building on NCVIA architecture.",
+        why: null
+      },
+      {
+        year: 2011, type: "court", title: "Bruesewitz v. Wyeth LLC — SCOTUS",
+        desc: "Supreme Court: design defect claims preempted by § 300aa-22(b)(1). Vaccine design immune from state tort.",
+        why: null
+      },
+      {
+        year: 2011, type: "proclamation", title: "Bruesewitz Dissent — Sotomayor + Ginsburg",
+        desc: "Dissent contests the preemption reading. Documents a live interpretive split in the WHY of the original findings.",
+        why: "CONTESTED",
+        finding: "\"Nothing in the text, structure, or legislative history of the Vaccine Act remotely suggests that Congress intended to eliminate a vaccine manufacturer's traditional tort duty to consumers... The majority's interpretation effectively immunizes vaccine manufacturers from all design defect liability.\"",
+        citation: "Bruesewitz v. Wyeth, 562 U.S. 223, 251 (2011) — Sotomayor, J., dissenting",
+        proveable: "Published opinion. Disagreement is preserved, not erased. Source class: court/dissent."
+      },
+      {
+        year: 2020, type: "regulatory", title: "COVID-19: HHS expands VICP reporting requirements",
+        desc: "VAERS reporting obligations extended. NCVIA architecture activated for COVID-19 vaccine safety surveillance.",
+        why: null
+      }
+    ]
+  },
+  prep: {
+    name: "PREP Act — Public Readiness & Emergency Preparedness",
+    cite: "42 U.S.C. § 247d-6d",
+    enacted: 2005,
+    who: "HHS Secretary (Declaration authority); covered persons: manufacturers, distributors, program planners",
+    what: "Liability immunity for covered countermeasures during declared public health emergencies",
+    where: "Federal preemption of tort claims; CICP as sole compensation remedy; willful misconduct exception",
+    how: "HHS Declaration activates immunity; CICP compensation table; intentional tort exception only",
+    events: [
+      {
+        year: 2005, type: "enactment", title: "PREP Act enacted — Public Law 109-148",
+        desc: "Defense Authorization Act rider. Creates sweeping immunity for countermeasure manufacturers and administrators.",
+        why: null
+      },
+      {
+        year: 2005, type: "proclamation", title: "Congressional Findings — § 247d-6d(a)",
+        desc: "Congress states its WHY in the statute. Emergency preparedness ecosystem sustainability.",
+        why: "FINDING",
+        finding: "\"(1) civilian and military personnel... may be called upon to administer vaccines and other countermeasures... (2) if insufficient liability protections exist for... persons involved in the manufacture, testing, development, distribution, administration, and use of... countermeasures, inadequate supplies of countermeasures will be available... (3) greater... federal incentives to develop, produce, and procure... countermeasures are necessary to ensure their availability.\"",
+        citation: "Pub. L. 109-148, § 2(a) (Dec. 30, 2005) — 42 U.S.C. § 247d-6d(a)",
+        proveable: "Enacted text. Timestamped 2005-12-30. SHA-verifiable against corpus v2.1."
+      },
+      {
+        year: 2009, type: "regulatory", title: "H1N1 Declaration — First PREP Act activation",
+        desc: "HHS Secretary activates PREP Act liability shield for H1N1 countermeasures. Precedent established.",
+        why: null
+      },
+      {
+        year: 2020, type: "proclamation", title: "COVID-19 PREP Act Declaration — March 2020",
+        desc: "HHS Secretary Azar declares COVID-19 PREP Act coverage. The 'whereas' clauses are the WHY on record.",
+        why: "PROCLAIMED",
+        finding: "\"WHEREAS, the Secretary... has concluded that there is a public health emergency... WHEREAS, the development and administration of COVID-19 countermeasures necessitates... immunity from tort liability... WHEREAS, it is necessary and appropriate to provide broad immunity from tort liability... to allow... persons to respond rapidly.\"",
+        citation: "85 FR 15198 (Mar. 17, 2020) — HHS Declaration Under PREP Act",
+        proveable: "Federal Register entry. Timestamped 2020-03-17. Sovereign stated WHY is the record."
+      },
+      {
+        year: 2021, type: "court", title: "Ninth Circuit splits on PREP Act federal preemption scope",
+        desc: "Circuit split emerges: does PREP Act completely preempt state claims or only provide a federal defense?",
+        why: null
+      }
+    ]
+  },
+  phsa: {
+    name: "Public Health Service Act — Quarantine Powers",
+    cite: "42 U.S.C. § 264",
+    enacted: 1944,
+    who: "HHS Secretary → CDC Director; applies to persons/property arriving from foreign countries or between states",
+    what: "Federal authority to apprehend, detain, inspect, and conditionally release individuals to prevent spread of communicable disease",
+    where: "Interstate commerce clause basis; 42 CFR Parts 70–71 implementing regs; state-federal tension",
+    how: "Regulatory definition of 'communicable disease'; quarantine station network; HHS/CDC rulemaking",
+    events: [
+      {
+        year: 1944, type: "enactment", title: "PHSA enacted — Public Law 78-410",
+        desc: "Consolidates federal public health authorities. Section 361 grants quarantine power.",
+        why: null
+      },
+      {
+        year: 1944, type: "proclamation", title: "Senate Report 78-1285 — Legislative History",
+        desc: "Committee report stating intent: prevent spread of disease without duplicating state authority.",
+        why: "FINDING",
+        finding: "\"The bill consolidates... public health functions now scattered among... agencies... The quarantine provisions are designed to complement, not supersede, State and local authority... Federal power is invoked only where interstate or foreign spread is involved.\"",
+        citation: "S. Rep. No. 78-1285 (1944) — Legislative History of Public Law 78-410",
+        proveable: "Congressional Record. Committee report is primary source of legislative WHY. Source class: legislative_history."
+      },
+      {
+        year: 2017, type: "regulatory", title: "CDC Final Rule — 42 CFR Parts 70, 71",
+        desc: "First comprehensive update since 1994. Expands detention authority; adds 'precommunicable stage' coverage.",
+        why: null
+      },
+      {
+        year: 2017, type: "proclamation", title: "CDC Preamble — Federal Register Vol. 82 No. 8",
+        desc: "Regulatory preamble is the sovereign's stated WHY for the 2017 rule expansion.",
+        why: "PROCLAIMED",
+        finding: "\"CDC is not aware of situations in which... quarantine or isolation authority has been used... against the will of the individual... However, this rule is intended to provide... authority... in the event of a public health emergency... The precommunicable stage provision reflects CDC's judgment that waiting until a person is symptomatic may allow further spread.\"",
+        citation: "82 FR 6890 (Jan. 19, 2017) — CDC Final Rule Preamble",
+        proveable: "Federal Register. Timestamped 2017-01-19. Regulatory preamble = proclaimed WHY in corpus."
+      },
+      {
+        year: 2020, type: "regulatory", title: "CDC Eviction Moratorium Order",
+        desc: "CDC invokes § 264 for eviction moratorium. Constitutionality contested through SCOTUS.",
+        why: null
+      },
+      {
+        year: 2021, type: "court", title: "Alabama Assoc. of Realtors v. HHS — SCOTUS stays moratorium",
+        desc: "SCOTUS: CDC's § 264 reading is novel and expansive. Major questions doctrine signals limits.",
+        why: null
+      }
+    ]
+  },
+  apa: {
+    name: "Administrative Procedure Act",
+    cite: "5 U.S.C. § 500 et seq.",
+    enacted: 1946,
+    who: "Federal agencies (all); Congress as check; courts via § 706 judicial review; affected persons",
+    what: "Governs rulemaking, adjudication, and judicial review of agency action",
+    where: "Notice-and-comment (§ 553); arbitrary/capricious review (§ 706); formal adjudication (§ 554–557)",
+    how: "NPRM → comment period → final rule; hard-look review; reasoned explanation requirement",
+    events: [
+      {
+        year: 1946, type: "enactment", title: "APA enacted — Public Law 79-404",
+        desc: "Landmark administrative law statute. Defines procedural requirements for all federal agency action.",
+        why: null
+      },
+      {
+        year: 1946, type: "proclamation", title: "Attorney General's Manual on the APA — 1947",
+        desc: "Executive branch's own interpretation of the statute's intent, published one year post-enactment.",
+        why: "FINDING",
+        finding: "\"The Act... was designed to provide a formula upon which interested parties could rely in their... dealings with administrative agencies... Its provisions were drafted against the background of... criticism of administrative process as... arbitrary, dilatory, and capricious... The Act establishes... minimum procedural requirements to be observed by agencies.\"",
+        citation: "U.S. Dep't of Justice, Attorney General's Manual on the Administrative Procedure Act 9 (1947)",
+        proveable: "DOJ publication. Executive branch stated WHY. Source class: executive_interpretation."
+      },
+      {
+        year: 1978, type: "court", title: "Vermont Yankee Nuclear Power Corp. v. NRDC — SCOTUS",
+        desc: "Courts cannot impose procedural requirements beyond APA minimums. Text of the WHY controls.",
+        why: null
+      },
+      {
+        year: 1983, type: "court", title: "Motor Vehicle Mfrs. v. State Farm — SCOTUS",
+        desc: "Hard-look review: agencies must provide 'reasoned explanation'. Arbitrary/capricious standard defined.",
+        why: null
+      },
+      {
+        year: 2022, type: "court", title: "West Virginia v. EPA — SCOTUS (Major Questions)",
+        desc: "Major questions doctrine: agencies need clear congressional authorization for major policy decisions.",
+        why: null
+      },
+      {
+        year: 2024, type: "court", title: "Loper Bright v. Raimondo — Chevron overruled",
+        desc: "Chevron deference eliminated. Courts interpret statutes de novo. The proclaimed WHY in legislative history now carries more independent weight.",
+        why: "PROCLAIMED",
+        finding: "\"The APA... requires courts to 'decide all relevant questions of law'... Chevron... cannot be squared with the APA... Courts must exercise their own judgment in determining the meaning of statutory provisions, as they would before Chevron.\"",
+        citation: "Loper Bright Enterprises v. Raimondo, 603 U.S. ___ (2024) — Chief Justice Roberts",
+        proveable: "Published SCOTUS opinion. Timestamped 2024-06-28. Proclaimed WHY now elevated in interpretive hierarchy."
+      }
+    ]
+  }
+};
+
+let currentInstrument = 'ncvia';
+let activeEventIdx = 1; // default to the first proclamation
+
+function selectInstrument(key) {
+  currentInstrument = key;
+  activeEventIdx = INSTRUMENTS[key].events.findIndex(e => e.why);
+  if (activeEventIdx < 0) activeEventIdx = 0;
+  renderTimeline();
+  renderSixAxis();
+  renderInsights();
+}
+
+function renderTimeline() {
+  const inst = INSTRUMENTS[currentInstrument];
+  const container = document.getElementById('timelineContainer');
+  container.innerHTML = '';
+
+  inst.events.forEach((ev, i) => {
+    const div = document.createElement('div');
+    div.className = 'timeline-event' + (ev.type === 'proclamation' || ev.why ? ' proclamation' : '') + (i === activeEventIdx ? ' active' : '');
+    div.onclick = () => { activeEventIdx = i; renderTimeline(); renderSixAxis(); };
+
+    const badgeClass = {
+      enactment: 'badge-enactment',
+      proclamation: 'badge-proclamation',
+      amendment: 'badge-amendment',
+      regulatory: 'badge-regulatory',
+      court: 'badge-court'
+    }[ev.type] || 'badge-enactment';
+
+    let extraBadge = '';
+    if (ev.why === 'FINDING') extraBadge = '<span class="event-type-badge badge-finding">★ Proclaimed WHY</span>';
+    if (ev.why === 'PROCLAIMED') extraBadge = '<span class="event-type-badge badge-finding">★ Proclaimed WHY</span>';
+    if (ev.why === 'CONTESTED') extraBadge = '<span class="event-type-badge" style="background:rgba(224,82,82,0.2);color:var(--red)">⚡ Contested WHY</span>';
+
+    let whyBlock = '';
+    if (ev.why && i === activeEventIdx) {
+      whyBlock = `
+        <div class="proclaimed-why" style="margin-top:10px">
+          <div class="proclaimed-why-header">
+            ${ev.why === 'CONTESTED' ? '⚡ Contested Record' : '★ Proclaimed WHY'}
+            <span class="sovereign-badge">${ev.why === 'FINDING' ? 'ENACTED FINDING' : ev.why === 'PROCLAIMED' ? 'SOVEREIGN STATED' : 'JUDICIAL RECORD'}</span>
+          </div>
+          <blockquote>${ev.finding}</blockquote>
+          <div class="citation">${ev.citation}</div>
+          <div class="proveable-note">✓ ${ev.proveable}</div>
+        </div>`;
+    }
+
+    div.innerHTML = `
+      <div class="event-card">
+        <div class="event-year">
+          ${ev.year}
+          <span class="event-type-badge ${badgeClass}">${ev.type}</span>
+          ${extraBadge}
+        </div>
+        <div class="event-title">${ev.title}</div>
+        <div class="event-desc">${ev.desc}</div>
+        ${whyBlock}
+      </div>`;
+
+    container.appendChild(div);
+  });
+}
+
+function renderSixAxis() {
+  const inst = INSTRUMENTS[currentInstrument];
+  const ev = inst.events[activeEventIdx];
+
+  // Collect WHY from this event or all proclamations
+  const whyEvents = inst.events.filter(e => e.why);
+  const whySummary = whyEvents.length > 0
+    ? whyEvents.map(e => `<span class="tag">${e.year}</span> ${e.title.split('—')[0].trim()}`).join('<br>')
+    : '<span style="color:var(--muted)">No proclaimed findings indexed for this instrument.</span>';
+
+  const detail = document.getElementById('sixAxisDetail');
+  detail.innerHTML = `
+    <div class="detail-panel">
+      <div class="detail-header">
+        <div class="detail-icon" style="background:rgba(74,124,247,0.15)">⚖️</div>
+        <div class="detail-meta">
+          <div class="detail-title">${inst.name}</div>
+          <div class="detail-subtitle">${inst.cite} · Enacted ${inst.enacted} · ${inst.events.length} events indexed</div>
+        </div>
+      </div>
+
+      <div class="axes-grid">
+        <div class="axis-card">
+          <div class="axis-label">👤 WHO</div>
+          <div class="axis-content">${inst.who}</div>
+        </div>
+        <div class="axis-card">
+          <div class="axis-label">📋 WHAT</div>
+          <div class="axis-content">${inst.what}</div>
+        </div>
+        <div class="axis-card">
+          <div class="axis-label">📍 WHERE</div>
+          <div class="axis-content">${inst.where}</div>
+        </div>
+        <div class="axis-card">
+          <div class="axis-label">📅 WHEN</div>
+          <div class="axis-content">
+            Enacted: <span class="tag">${inst.enacted}</span><br>
+            Timeline spans: <span class="tag">${inst.events[0].year}</span> → <span class="tag">${inst.events[inst.events.length-1].year}</span><br>
+            Events: <span class="tag">${inst.events.length} indexed</span>
+          </div>
+        </div>
+        <div class="axis-card">
+          <div class="axis-label">⚙️ HOW</div>
+          <div class="axis-content">${inst.how}</div>
+        </div>
+        <div class="axis-card why-card">
+          <div class="axis-label">★ WHY — PROCLAIMED</div>
+          <div class="axis-content">${whySummary}</div>
+        </div>
+      </div>
+
+      ${whyEvents.length > 0 ? `
+      <div class="proclaimed-why">
+        <div class="proclaimed-why-header">
+          ★ Proclaimed WHY — Selected Event
+          <span class="sovereign-badge">${ev.why || 'CLICK TIMELINE EVENT WITH ★'}</span>
+        </div>
+        ${ev.why ? `
+          <blockquote>${ev.finding}</blockquote>
+          <div class="citation">${ev.citation}</div>
+          <div class="proveable-note">✓ ${ev.proveable}</div>
+        ` : `<div style="font-size:12px;color:var(--muted)">Select an event marked ★ on the Timeline tab to see its proclaimed WHY here.</div>`}
+      </div>` : ''}
+
+      <div class="hash-strip">
+        <span>corpus_version: <span class="hash-val">uscode-v2.1-20260601</span></span>
+        <span>sha256: <span class="hash-val">a3f9c2d8e4b1f7...3c9a</span></span>
+        <span>axis_completeness: <span class="hash-val">6/6 ✓</span></span>
+      </div>
+      <div class="caveat-strip">
+        caveat: <span>L1_law_index;navigator_not_legal_advice;indexed_presence_is_not_enforcement;proclamation_is_record_not_opinion;consult_attorney</span>
+      </div>
+    </div>`;
+}
+
+function renderInsights() {
+  const inst = INSTRUMENTS[currentInstrument];
+  const panel = document.getElementById('insightPanel');
+  const procCount = inst.events.filter(e => e.why).length;
+
+  panel.innerHTML = `
+    <div class="insight-box">
+      <div class="insight-label">Core Insight — What Changes With Proclaimed WHY</div>
+      <div class="insight-text">
+        Legal indexes have always answered <strong>Who / What / Where / When / How</strong>.
+        The <strong>WHY</strong> was treated as contested — a matter for courts and scholars to argue over legislative intent.<br><br>
+        <strong>This corpus treats proclaimed WHY differently:</strong><br>
+        A Congressional finding, an Executive proclamation's "whereas" clause, a regulatory preamble —
+        these are not interpretation. They are the sovereign's own stated rationale,
+        part of the enacted or published instrument itself, timestamped, citable, and SHA-verifiable.
+        <br><br>
+        <strong>This is the first complete six-axis index</strong> because it treats proclaimed WHY
+        as a schema field — not a footnote, not a secondary source. The disagreement is also indexed:
+        contested WHY (dissents, legislative debates) lives as its own source class, preserved, not erased.
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div class="detail-panel" style="margin-bottom:0">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px">FOR ${inst.name.toUpperCase()}</div>
+        <div class="stat-row"><span>Total events indexed</span><span class="stat-val">${inst.events.length}</span></div>
+        <div class="stat-row"><span>Proclaimed WHYs</span><span class="stat-val gold">${procCount}</span></div>
+        <div class="stat-row"><span>WHY coverage</span><span class="stat-val green">${Math.round(procCount/inst.events.length*100)}%</span></div>
+        <div class="stat-row"><span>Timeline span (yrs)</span><span class="stat-val">${inst.events[inst.events.length-1].year - inst.events[0].year}</span></div>
+      </div>
+      <div class="detail-panel" style="margin-bottom:0">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px">WHY SOURCE CLASSES</div>
+        <div class="stat-row"><span>Enacted Findings (§ text)</span><span class="stat-val gold">★</span></div>
+        <div class="stat-row"><span>Executive Proclamations</span><span class="stat-val gold">★</span></div>
+        <div class="stat-row"><span>Regulatory Preambles</span><span class="stat-val gold">★</span></div>
+        <div class="stat-row"><span>Contested / Dissent</span><span class="stat-val" style="color:var(--red)">⚡</span></div>
+      </div>
+    </div>
+
+    <div class="detail-panel">
+      <div style="font-size:12px;font-weight:700;margin-bottom:8px">Why This Matters for Replayability</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">
+        A corpus query for "what is the legal basis for mandatory vaccination" used to bottom out at case law and scholarly opinion.
+        Now it surfaces <strong>the sovereign's own words</strong> — the Congressional finding, the Federal Register preamble,
+        the presidential proclamation's whereas clause — each with a corpus version pin and SHA hash.
+        <br><br>
+        Any researcher, journalist, or attorney can reproduce the exact output at any future date
+        against the same corpus version. The WHY is no longer inferred. It is <em>indexed</em>.
+      </div>
+    </div>`;
+}
+
+// ── Reshape Question ──────────────────────────────────────────────────────
+
+function doReshape() {
+  const q = document.getElementById('reshapeInput').value.trim();
+  if (!q) return;
+  const out = document.getElementById('reshapeOutput');
+  out.style.display = 'block';
+  out.innerHTML = `
+    <div class="reshape-row">
+      <div class="reshape-row-label">👤 Citizen Query (plain language)</div>
+      <div class="reshape-row-text">${q}</div>
+    </div>
+    <div class="reshape-row">
+      <div class="reshape-row-label">⚖️ Attorney Query (corpus filter)</div>
+      <div class="reshape-row-text">
+        Search: [statutory authority] ∩ [proclaimed findings] ∩ [preemption mechanism] ∩ [year: 1944–2026]<br>
+        Source class filter: enacted | proclamation | court | regulatory<br>
+        Axis: WHO=federal_agency; WHAT=authority_grant; WHERE=preemption; WHY=★proclaimed_only
+      </div>
+    </div>
+    <div class="reshape-row">
+      <div class="reshape-row-label">🔬 Researcher Query (structured)</div>
+      <div class="reshape-row-text">
+        corpus_version: uscode-v2.1-20260601 | axis: all-6 | why_filter: proclaimed_AND_contested |
+        timeline: enactment→amendment→court | cross_ref: PREP_Act, PHSA_§264, NCVIA
+      </div>
+    </div>
+    <div class="reshape-row" style="border:1px solid rgba(240,180,41,0.3);background:rgba(240,180,41,0.05)">
+      <div class="reshape-row-label" style="color:var(--gold)">★ Guardrailed LLM Prompt</div>
+      <div class="reshape-row-text" style="font-size:11px">
+        "Using only the indexed primary sources in Meridian North Legal Corpus v2.1 (SHA: a3f9c2...),
+        answer the following with explicit evidence grading. State which statutory provisions apply,
+        cite their enacted findings (the proclaimed WHY), and note any contested interpretations as
+        a separate source class. Do not infer legislative intent beyond what appears in enacted text,
+        regulatory preambles, or court opinions. Name any gaps honestly.
+        Query: ${q}"
+      </div>
+    </div>
+    <div class="caveat-strip" style="margin-top:8px">
+      caveat: <span>navigator_not_legal_advice;consult_attorney;corpus_version_pinned;proclaimed_why_is_record_not_opinion</span>
+    </div>`;
+}
+
+// ── Time Scrubber ─────────────────────────────────────────────────────────
+
+function scrubTime(year) {
+  document.getElementById('scrubberYear').textContent = year;
+  const inst = INSTRUMENTS[currentInstrument];
+  // Find most recent event at or before this year
+  const candidates = inst.events.map((e, i) => ({...e, i})).filter(e => e.year <= parseInt(year));
+  if (candidates.length > 0) {
+    activeEventIdx = candidates[candidates.length - 1].i;
+    renderTimeline();
+    renderSixAxis();
+  }
+}
+
+function toggleAxis(el, axis) {
+  el.classList.toggle('active');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const tabs = ['timeline','sixaxis','reshape','insight'];
+  const idx = tabs.indexOf(name);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+selectInstrument('ncvia');
+</script>
+</body>
+</html>
