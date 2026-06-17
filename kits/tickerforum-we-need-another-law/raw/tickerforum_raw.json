@@ -1,8 +1,8 @@
 {
   "corpus": "tickerforum-financial-legal (antitrust enforcement slice)",
   "index_version": "tickerforum_legal_index_v1",
-  "source_csv_sha256": "753790be53c764a6f6c8d414665018f3f1d76d90841da3b98b2036821b33e945",
-  "generated": "2026-06-16",
+  "source_csv_sha256": "645eb4e0324a2f88583610392935691fae3cd90d708f05cc08f17be955410a49",
+  "generated": "2026-06-17",
   "layer": "RAW \u2014 sovereign, deterministic, no model in the result path",
   "authored_by": "deterministic generator (build_raw.py) over a controlled-token index",
   "record_count": 12,
@@ -180,12 +180,12 @@
     {
       "id": "tff-007",
       "title": "AMERICA Act \u2014 ad-tech / Google ad-intermediation divestiture bill",
-      "citation": "AMERICA Act (S.1073-equiv)",
+      "citation": "S.1060 (119th Congress)",
       "year": 2025,
       "source_class": "bill_pending",
       "id_kind": "bill",
-      "verified": "POINTER_ONLY",
-      "retrieval_status": "POINTER_ONLY",
+      "verified": "VERIFIED",
+      "retrieval_status": "VERIFIED",
       "mechanism_nodes": [
         "ad_tech_intermediation",
         "antitrust_monopolization"
@@ -195,14 +195,16 @@
       ],
       "enforcement_signal": "WATCH",
       "caveat_tokens": [
-        "L2_bill_pointer",
-        "targets_ad_exchange_intermediation_conflict",
-        "exact_bill_number_unconfirmed_this_pass",
+        "L1_bill_index",
+        "introduced_not_enacted",
+        "Mike_Lee_March_13_2025",
+        "Advertising_Middlemen_Endangering_Rigorous_Internet_Competition_Accountability_Act",
+        "20B_threshold_no_owning_multiple_ad_exchange_types",
+        "5B_brokerage_best_interest_duty",
         "referenced_as_Google_ad_monopoly_bill",
-        "pending_is_not_law",
-        "verify_before_citing"
+        "pending_is_not_law"
       ],
-      "link": "https://www.congress.gov/"
+      "link": "https://www.congress.gov/bill/119th-congress/senate-bill/1060"
     },
     {
       "id": "tff-008",

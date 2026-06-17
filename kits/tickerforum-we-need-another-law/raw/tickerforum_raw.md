@@ -6,8 +6,8 @@
 > The narration is attributed to whatever model runs it — it is NOT part of this raw layer.
 
 - index_version: `tickerforum_legal_index_v1`
-- source_csv_sha256: `753790be53c764a6f6c8d414665018f3f1d76d90841da3b98b2036821b33e945`
-- generated: 2026-06-16 · records: 12
+- source_csv_sha256: `645eb4e0324a2f88583610392935691fae3cd90d708f05cc08f17be955410a49`
+- generated: 2026-06-17 · records: 12
 - source article: Karl Denninger, *The Market Ticker*, 2026-06-14 — https://market-ticker.org/akcs-www?post=255563
 
 ## Signal vocabulary (controlled)
@@ -77,14 +77,14 @@
 - **primary source:** https://www.congress.gov/bill/119th-congress/senate-bill/2153/text
 
 ### tff-007 — AMERICA Act — ad-tech / Google ad-intermediation divestiture bill
-- **citation:** AMERICA Act (S.1073-equiv)  ·  **class:** bill_pending  ·  **signal:** WATCH
+- **citation:** S.1060 (119th Congress)  ·  **class:** bill_pending  ·  **signal:** WATCH
 - **WHO:** big_tech
-- **WHAT:** AMERICA Act — ad-tech / Google ad-intermediation divestiture bill (AMERICA Act (S.1073-equiv))
+- **WHAT:** AMERICA Act — ad-tech / Google ad-intermediation divestiture bill (S.1060 (119th Congress))
 - **WHERE:** ad_tech_intermediation, antitrust_monopolization
-- **WHEN:** 2025 · POINTER_ONLY
+- **WHEN:** 2025 · VERIFIED
 - **HOW:** bill_pending · signal=WATCH
-- **WHY:** L2_bill_pointer; targets_ad_exchange_intermediation_conflict; exact_bill_number_unconfirmed_this_pass; referenced_as_Google_ad_monopoly_bill; pending_is_not_law; verify_before_citing
-- **primary source:** https://www.congress.gov/
+- **WHY:** L1_bill_index; introduced_not_enacted; Mike_Lee_March_13_2025; Advertising_Middlemen_Endangering_Rigorous_Internet_Competition_Accountability_Act; 20B_threshold_no_owning_multiple_ad_exchange_types; 5B_brokerage_best_interest_duty; referenced_as_Google_ad_monopoly_bill; pending_is_not_law
+- **primary source:** https://www.congress.gov/bill/119th-congress/senate-bill/1060
 
 ### tff-008 — AMA CPT coding license mandate — HIPAA-designated billing standard
 - **citation:** HIPAA 45 CFR 162 / CMS-AMA license  ·  **class:** agency_practice  ·  **signal:** WARN

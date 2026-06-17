@@ -38,6 +38,7 @@ attributed via its `authored_by` stamp and regenerable on any LLM through `raw/N
 |------|------------|
 | `raw/tickerforum_raw.md` · `raw/tickerforum_raw.json` | **Sovereign raw payload** — six-axis facts + caveat tokens + source links, no narration |
 | `raw/NARRATION_PROMPT.md` | Portable prompt to regenerate the study on any model (Claude/Grok/Gemini/local) |
+| `narrations/` | **Multi-model A/B** — same raw payload + same prompt, narrated by Claude (passed) and local BitNet (failed, Beacon-signed); Grok/Gemini pending. The honest measure of the model's contribution. |
 | `build_raw.py` | Deterministic generator for the raw layer (rebuild from the index) |
 | `STUDY_6axis_we_need_another_law.md` | The six-axis study — narration layer (model-authored, attributed) |
 | `tickerforum_legal_review.html` | Self-contained interactive webform (open in any browser, no server) |
