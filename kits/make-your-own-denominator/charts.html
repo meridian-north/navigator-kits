@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidence charts — vaccine safety actions & the anti-placebo limit (Meridian North)</title>
+<style>
+ :root{
+  --bg:#f4f2ec; --panel:#ffffff; --panel2:#efece4; --ink:#1e2630; --mut:#56616e; --line:#d7d1c6;
+  --acc:#345670; --accd:#284258; --warn:#a85a52; --warnd:#7e3f39; --good:#5e8468; --goodd:#3f5e48;
+  --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,"Times New Roman",serif;
+ }
+ *{box-sizing:border-box}
+ body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+ .wrap{max-width:900px;margin:0 auto;padding:38px 22px 70px}
+ h1{font-family:var(--serif);font-size:29px;font-weight:600;margin:0 0 6px}
+ h2{font-family:var(--serif);font-size:22px;margin:34px 0 6px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+ p{margin:0 0 14px;max-width:74ch} .sub{color:var(--mut)}
+ .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 12px 8px;margin:16px 0}
+ svg{width:100%;height:auto;display:block}
+ .legend{display:flex;flex-wrap:wrap;gap:16px;margin:8px 6px 4px;font-size:14px;color:var(--mut)}
+ .legend span{display:flex;align-items:center;gap:6px}
+ .sw{width:14px;height:14px;border-radius:3px;display:inline-block}
+ .note{color:var(--mut);font-size:14px;border-top:1px solid var(--line);margin-top:30px;padding-top:14px}
+ a{color:var(--acc)}
+</style></head><body>
+<div class="wrap">
+  <h1>The system removes problem vaccines — when it has the data</h1>
+  <p class="sub">When post-market surveillance caught a real, identifiable signal, the system acted: suspended,
+  replaced, or de-recommended the product. These are <b>sharp, identifiable</b> signals. The subtler, diffuse,
+  product- or lot-specific questions are exactly what a denominated, linked system would let anyone check.
+  Pro-safety, not anti-vaccine — and an argument for opening the data, not closing it.</p>
+
+  <h2>1 · Data-driven vaccine safety actions in the US</h2>
+  <div class="card">
+    <div class="legend" aria-hidden="true">
+      <span><i class="sw" style="background:#a85a52"></i> suspended / withdrawn</span>
+      <span><i class="sw" style="background:#345670"></i> replaced on schedule</span>
+      <span><i class="sw" style="background:#b5893f"></i> recommendation changed</span>
+    </div>
+    <svg id="timeline" viewBox="0 0 900 360" role="img"
+      aria-label="Timeline of US data-driven vaccine safety actions: 1976 swine flu suspended for Guillain-Barre; 1999 RotaShield withdrawn for intussusception; 2000 oral polio vaccine replaced by IPV to end vaccine-associated polio; 2008 MMRV preference dropped for febrile seizures; 2010 Rotarix suspended for a contaminant.">
+    </svg>
+  </div>
+
+  <h2>2 · Why our null is honest about what it can't see (the anti-placebo limit)</h2>
+  <p>Our schedule check compares each vaccination age to its <b>adjacent days</b>. That catches a
+  <b>sharp</b> post-shot spike — but on the dense infant schedule the neighbor days aren't a true placebo, so a
+  <b>diffuse</b> effect lifts them too and gets subtracted out. Left: a sharp spike stands above its neighbors
+  (caught — this is how rotavirus/intussusception flags). Right: a diffuse rise hides inside the comparison
+  (missed). Beating this needs a true unvaccinated baseline — the withheld linked data.</p>
+  <div class="card">
+    <svg id="concept" viewBox="0 0 900 320" role="img"
+      aria-label="Two illustrative curves. Left: a baseline decline with a sharp narrow spike at the shot day, standing clearly above adjacent windows — detectable. Right: the same baseline with a low diffuse rise spread across the whole window, lifting the neighbors too, so the at-age window does not stand out — undetectable by a self-controlled comparison.">
+    </svg>
+    <p class="sub" style="font-size:14px;margin:4px 8px 6px">Illustration of the method's sensitivity, not real data.</p>
+  </div>
+
+  <div class="note">
+    <b>Sources.</b> RotaShield/intussusception: CDC historical (archive.cdc.gov) &amp; MMWR 1999 (PMID 15343145).
+    · VAPP / OPV→IPV: CDC VAPP FAQ. · 1976 swine flu &amp; Guillain-Barré: CDC Museum. · MMRV febrile seizures:
+    Klein NP et al., <i>Pediatrics</i> 2010 (PMID 20587679). · Rotarix porcine circovirus suspension: FDA, 2010.
+    · Self-controlled-design limits: Hallas, <i>J Intern Med</i> 2014; Cadarette (ISPE), <i>PDS</i> 2021. ·
+    A navigator, not medical advice. Leads, not verdicts. Meridian North / Garrison Node.
+  </div>
+</div>
+
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  function mk(svg,n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e;}
+  function tx(svg,x,y,s,a){var t=document.createElementNS(NS,"text",a);for(var k in (a||{}))t.setAttribute(k,a[k]);t.setAttribute("x",x);t.setAttribute("y",y);t.textContent=s;svg.appendChild(t);return t;}
+
+  // ---------- Timeline ----------
+  (function(){
+    var svg=document.getElementById("timeline");
+    var x0=60,x1=860,y=200,yr0=1974,yr1=2012;
+    function X(yr){return x0+(yr-yr0)/(yr1-yr0)*(x1-x0);}
+    // axis
+    mk(svg,"line",{x1:x0,y1:y,x2:x1,y2:y,stroke:"#56616e","stroke-width":2});
+    for(var yr=1975;yr<=2010;yr+=5){
+      mk(svg,"line",{x1:X(yr),y1:y-5,x2:X(yr),y2:y+5,stroke:"#56616e","stroke-width":1});
+      tx(svg,X(yr),y+22,yr,{fill:"#56616e","font-size":13,"text-anchor":"middle"});
+    }
+    var ev=[
+      {yr:1976,c:"#a85a52",t:"Swine flu",s:"Guillain-Barré",a:"program suspended",up:1},
+      {yr:1999,c:"#a85a52",t:"RotaShield",s:"intussusception",a:"withdrawn (~9 mo)",up:0},
+      {yr:2000,c:"#345670",t:"OPV → IPV",s:"vaccine-assoc. polio",a:"replaced on schedule",up:1},
+      {yr:2008,c:"#b5893f",t:"MMRV",s:"febrile seizures",a:"preference dropped",up:0},
+      {yr:2010,c:"#a85a52",t:"Rotarix",s:"PCV1 contaminant",a:"suspended (temp.)",up:1}
+    ];
+    ev.forEach(function(e){
+      var x=X(e.yr), dir=e.up?-1:1, ty=y+dir*1; var cardY=y+dir*46, cardH=78;
+      mk(svg,"line",{x1:x,y1:y,x2:x,y2:y+dir*40,stroke:e.c,"stroke-width":2});
+      mk(svg,"circle",{cx:x,cy:y,r:6,fill:e.c});
+      var top=e.up? (cardY-cardH) : cardY;
+      mk(svg,"rect",{x:x-78,y:top,width:156,height:cardH,rx:8,fill:"#ffffff",stroke:e.c,"stroke-width":1.5});
+      var ly=top+22;
+      tx(svg,x,ly,e.yr+" · "+e.t,{fill:"#1e2630","font-size":15,"font-weight":600,"text-anchor":"middle"});
+      tx(svg,x,ly+22,e.s,{fill:"#56616e","font-size":13,"text-anchor":"middle"});
+      tx(svg,x,ly+44,e.a,{fill:e.c==="#a85a52"?"#7e3f39":(e.c==="#345670"?"#284258":"#7d6428"),"font-size":13,"font-weight":600,"text-anchor":"middle"});
+    });
+    tx(svg,x0,28,"Each action followed a sharp, identifiable signal caught by surveillance.",{fill:"#56616e","font-size":14});
+  })();
+
+  // ---------- Concept: sharp vs diffuse ----------
+  (function(){
+    var svg=document.getElementById("concept");
+    function panel(ox,title,kind){
+      var w=380,h=210,x0=ox+44,x1=ox+w-16,y0=250,y1=70;
+      function X(d){return x0+(d/100)*(x1-x0);}            // d: 0..100 (days, illustrative)
+      function Y(v){return y0-(v/120)*(y0-y1);}            // v: count
+      // baseline decline + bump
+      function base(d){return 90*Math.exp(-0.012*d);}
+      function val(d){
+        if(kind==="sharp") return base(d)+70*Math.exp(-Math.pow(d-50,2)/8);     // tall narrow at day50
+        return base(d)+16*Math.exp(-Math.pow(d-50,2)/260);                      // low wide
+      }
+      // three equal windows around day 50
+      [[36,44,"#efece4"],[44,56,"#f1e2df"],[56,64,"#efece4"]].forEach(function(b){
+        mk(svg,"rect",{x:X(b[0]),y:y1,width:X(b[1])-X(b[0]),height:(y0-y1),fill:b[2]});
+      });
+      // axis
+      mk(svg,"line",{x1:x0,y1:y0,x2:x1,y2:y0,stroke:"#56616e","stroke-width":1.5});
+      // curve
+      var pts=[];for(var d=0;d<=100;d+=1)pts.push(X(d).toFixed(1)+","+Y(val(d)).toFixed(1));
+      mk(svg,"polyline",{points:pts.join(" "),fill:"none",stroke:"#345670","stroke-width":2.5});
+      tx(svg,ox+w/2,46,title,{fill:"#1e2630","font-size":16,"font-weight":600,"text-anchor":"middle"});
+      tx(svg,X(50),y0+20,"shot",{fill:"#7e3f39","font-size":12,"text-anchor":"middle"});
+      var verdict = kind==="sharp" ? "AT-shot ≫ neighbors → CAUGHT" : "AT-shot ≈ neighbors → MISSED";
+      tx(svg,ox+w/2,y0+40,verdict,{fill:kind==="sharp"?"#3f5e48":"#7e3f39","font-size":14,"font-weight":600,"text-anchor":"middle"});
+    }
+    panel(20,"Sharp, localized effect","sharp");
+    panel(480,"Diffuse effect","diffuse");
+  })();
+})();
+</script>
+</body></html>

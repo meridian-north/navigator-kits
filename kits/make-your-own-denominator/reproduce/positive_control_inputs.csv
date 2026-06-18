@@ -1,0 +1,9 @@
+signal_id,vaccine,dose,schedule_age_months,doses_n,risk_window_days,background_per100k_yr,observed_cases,expected_cases,attributable_per100k,relative_incidence,published_significant,source,caveat
+rv5_dose1_7d,RV5_RotaTeq,1,2,507874,7,15,,,1.1,,yes,"Yih NEJM 2014;370:503-512 PMID24422676 (FDA Mini-Sentinel/PRISM)",background_at_2mo_interpolated;CI_0.3-2.7;SCRI_design
+rv5_dose1_21d,RV5_RotaTeq,1,2,507874,21,15,,,1.5,,yes,"Yih NEJM 2014;370:503-512 PMID24422676",background_at_2mo_interpolated;CI_0.2-3.2
+rv5_dose2_21d,RV5_RotaTeq,2,4,384000,21,30,,,0.0,,no,"Yih NEJM 2014 (null after dose 2)",negative_control_within_same_vaccine;background_at_4mo_interpolated
+rv5_dose3_21d,RV5_RotaTeq,3,6,386000,21,55,,,0.0,,no,"Yih NEJM 2014 (null after dose 3)",negative_control_within_same_vaccine;background_at_6mo_near_peak
+rv1_dose1_pub,RV1_Rotarix,1,2,,,15,6,0.72,5.3,,yes,"Weintraub NEJM 2014;370:513-519 (CDC VSD)",published_observed_and_expected_used_directly;O/E=8.3
+mmr_d1_fs,MMR,1,12,,4,,,,,3.7,yes,"Klein Pediatrics 2010 / Vestergaard JAMA 2004 (CDC VSD)",febrile_seizure;relative_incidence_days7-10;Vestergaard_RR2.75
+mmrv_d1_fs,MMRV_ProQuad,1,12,,4,,,,,7.6,yes,"Klein Pediatrics 2010 (CDC VSD)",febrile_seizure;~1_extra_per_2300_doses;combination_higher_than_separate
+mmr_plus_v_sep_fs,MMR+Varicella_separate,1,12,,4,,,,,4.0,yes,"Klein Pediatrics 2010 (CDC VSD)",febrile_seizure;separate_lower_than_MMRV_dose-response_specificity

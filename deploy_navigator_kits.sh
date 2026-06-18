@@ -37,6 +37,25 @@ mount_kit "$HOME/usc_section_query.html"                 "usc-section-lookup"   
 mount_kit "$HOME/usc_growth_curve.html"                  "usc-growth-curve"       no
 # nsclc_supplement_review.html is the user's PERSONAL health page — intentionally NOT published.
 
+# --- Make Your Own Denominator kit (PUBLIC files only) -----------------------------
+# Publishes the two browser pages + the open-method scripts + cited inputs + README.
+# IMPORTANT: the outreach/strategy docs in that folder are PRIVATE and must NOT ship:
+#   BRIEF_for_Secretary_and_Senator.md, STEER_Johnson_Kory_use_the_null.md,
+#   REPLY_anti_placebo_and_posts.md, ONEPAGER_open_the_denominator.md,
+#   ASK_GEMINI_wonder_access.md, TO_DR_KORY_the_stronger_argument.md, X_POST_*  — never copied.
+MYOD="$HOME/make-your-own-denominator"; KDIR="kits/make-your-own-denominator"
+if [ -d "$MYOD" ]; then
+  mkdir -p "$KDIR/reproduce"
+  cp "$MYOD/kmv-019_make_your_own_denominator.html" "$KDIR/index.html"
+  cp "$MYOD/evidence_charts.html"                    "$KDIR/charts.html"
+  for s in gather_nber_lbid.py inspect_schedule_bumps.py intussusception_positive_control.py \
+           gather_all_years.sh positive_control_inputs.csv reproduce_README.md; do
+    [ -f "$MYOD/$s" ] && cp "$MYOD/$s" "$KDIR/reproduce/"; done
+  echo "→ mounted $KDIR (public kit: pages + open code; strategy docs withheld)"
+else
+  echo "⚠ skip (missing): $MYOD"
+fi
+
 git add index.html README.md deploy_navigator_kits.sh kits
 git commit -m "Hub + README: list all live kits with links (pharma, supplements, 7 legal); refresh README" || echo "→ nothing new to commit"
 gh auth switch --user meridian-north 2>/dev/null || true

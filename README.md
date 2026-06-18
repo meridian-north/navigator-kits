@@ -12,6 +12,7 @@ claim-**navigator**, not a claim-engine — leads, not verdicts. **Not legal or 
 ### Pharmacovigilance & public health
 | Kit | Live link |
 |---|---|
+| Make Your Own Denominator | https://meridian-north.github.io/navigator-kits/kits/make-your-own-denominator/ |
 | Kennedy–Miller VAERS Review | https://meridian-north.github.io/vaers-1990-2026-searchable/kennedy-miller-kit/kennedy_miller_vaers_review.html |
 | 5-Minute VAERS — proof of concept | https://meridian-north.github.io/vaers-1990-2026-searchable/five-minute-vaers/ |
 | White paper: *The Engine Already Exists* | https://meridian-north.github.io/vaers-1990-2026-searchable/five-minute-vaers/the-engine-already-exists.html |

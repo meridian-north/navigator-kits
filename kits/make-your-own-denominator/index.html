@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Make Your Own Denominator — Meridian North (kmv-019)</title>
+<style>
+ :root{
+  --bg:#f4f2ec; --panel:#ffffff; --panel2:#efece4; --ink:#1e2630; --mut:#56616e; --line:#d7d1c6;
+  --acc:#345670; --accd:#284258; --warn:#a85a52; --warnd:#7e3f39; --good:#5e8468; --goodd:#3f5e48;
+  --band:#7d93a8;
+  --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,"Times New Roman",serif;
+ }
+ *{box-sizing:border-box}
+ body{margin:0;background:var(--bg);color:var(--ink);
+  font:18px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+ .wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+ h1{font-family:var(--serif);font-size:32px;font-weight:600;margin:0 0 8px;line-height:1.2}
+ h2{font-family:var(--serif);font-size:23px;font-weight:600;margin:38px 0 12px;
+  padding-bottom:7px;border-bottom:1px solid var(--line)}
+ h3{font-family:var(--serif);font-size:19px;margin:24px 0 8px}
+ p{margin:0 0 14px;max-width:72ch}
+ .sub{color:var(--mut);max-width:72ch}
+ .tag{display:inline-block;font:600 12px ui-monospace,monospace;color:var(--accd);background:var(--panel2);
+  border:1px solid var(--line);border-radius:20px;padding:3px 11px;margin:6px 0}
+ .posture{color:var(--mut);font-size:15px;font-style:italic;margin:2px 0 8px}
+ .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:18px 0}
+ .chartcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 10px 6px;margin:18px 0}
+ svg{width:100%;height:auto;display:block}
+ .legend{display:flex;flex-wrap:wrap;gap:16px;margin:6px 6px 12px;font-size:15px;color:var(--mut)}
+ .legend span{display:flex;align-items:center;gap:7px}
+ .sw{width:16px;height:16px;border-radius:3px;display:inline-block}
+ .ask{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--warn);
+  border-radius:0 10px 10px 0;padding:16px 18px;margin:16px 0;font-size:18px}
+ .ask b{color:var(--warnd)}
+ table{border-collapse:collapse;width:100%;font-size:16px;margin:12px 0}
+ th,td{border:1px solid var(--line);padding:8px 11px;text-align:right}
+ th:first-child,td:first-child{text-align:left}
+ thead th{background:var(--panel2);font-weight:600}
+ caption{caption-side:top;text-align:left;color:var(--mut);font-size:14px;margin-bottom:6px}
+ .flag{color:var(--warnd);font-weight:600}
+ .clear{color:var(--goodd);font-weight:600}
+ .pass{background:#e7efe8;border:1px solid var(--good);border-left:5px solid var(--good);
+  border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;color:var(--goodd);font-weight:600}
+ pre{background:#1e2630;color:#e9e6df;border-radius:10px;padding:14px 16px;overflow:auto;
+  font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}
+ .note{color:var(--mut);font-size:14px;border-top:1px solid var(--line);margin-top:34px;padding-top:16px}
+ a{color:var(--acc)} .small{font-size:15px;color:var(--mut)}
+</style></head><body>
+<div class="wrap">
+  <span class="tag">kmv-019 · make your own denominator</span>
+  <h1>Make your own denominator</h1>
+  <p class="sub">You are handed a numerator and denied a denominator — on purpose. Here is the problem made
+  visible, a test of whether the method even works, the method run on the contested question, and the one
+  decision that resolves it.</p>
+  <p class="posture">Neutral on safety · strong on method · a tool, not a verdict. Counts of reports are not
+  rates; a correlation is not a cause.</p>
+
+  <h2>1 · The missing number</h2>
+  <p>"Three children died." A lot, or nothing? You cannot say — until you know the <b>"out of how many."</b>
+  That bottom number is the <b>denominator</b>. A numerator without it is not a fact you can judge; it is a
+  number floating in the dark.</p>
+  <p>VAERS — the open vaccine report box — can only ever give a numerator: how many reports came in, never
+  out of how many people, and never how many of those events would have happened anyway. So both scary
+  directions of headline are unsupported: "thousands of reports!" and "no proven harm!" alike. <b>The box was
+  never built to carry a denominator.</b> The honest reply to "is it safe?" is "that is answerable, and we
+  are structurally prevented from answering it."</p>
+
+  <h2>2 · The denominator gap, made visible</h2>
+  <p>For four groups of children: deaths <b>reported to VAERS</b> within a week of a shot (an undercounted
+  floor), against the deaths ordinary background mortality alone would produce in that same week — our
+  <b>broad estimate</b>, drawn as a range. The range is wide <b>on purpose</b>: it is wide because the real
+  denominator (doses by age and week) is withheld. Release it and every grey bar collapses to a line.</p>
+  <div class="legend" aria-hidden="true">
+    <span><i class="sw" style="background:#a6b6c4;border:1px solid var(--band)"></i> Expected from background mortality — broad estimate (range)</span>
+    <span><i class="sw" style="background:var(--warn)"></i> Reported to VAERS, ≤7 days (a floor)</span>
+  </div>
+  <div class="chartcard">
+    <svg id="chart" viewBox="0 0 900 470" role="img"
+      aria-label="Log-scale chart comparing reported VAERS child deaths within 7 days of vaccination against a broad estimated range of background-expected deaths in the same window, across four age groups. In every group the reported floor sits far below the low end of the estimate, around 3 to 4 percent of expected.">
+      <desc>Reported per year: infants ~58, ages 1-4 ~9, ages 5-11 ~2, ages 12-17 ~7. Estimated background
+      in the same 7-day window per year: infants 1,310-3,060; 1-4: 120-280; 5-11: 42-99; 12-17: 120-280.</desc>
+    </svg>
+  </div>
+  <div class="ask"><b>The dare:</b> the grey estimate is deliberately broad, and on every plausible
+  denominator its low end still towers over what was reported — that is what "no gross excess" looks like on
+  the open record. There is exactly one way to prove it wrong: <b>release the actual denominator.</b> The
+  width of these bars is not ours to fix. It is theirs to collapse. <b>Why don't we have it?</b></div>
+
+  <h2>3 · Does the method even work? A positive control</h2>
+  <p>A tool that can only find problems is propaganda; a tool that finds the <i>real</i> one and clears the
+  false ones is an instrument. So we point the same observed-vs-expected engine at <b>two known, accepted</b>
+  signals, at <b>two different ages</b> — quantified by the FDA's own Mini-Sentinel/PRISM system and CDC's
+  Vaccine Safety Datalink: rotavirus → intussusception (~2 months), and MMR/MMRV → febrile seizures (12 months).</p>
+  <table>
+    <caption>Observed-vs-expected (or relative incidence) in the post-dose risk window, cited public figures. Flag if elevated.</caption>
+    <thead><tr><th>Signal</th><th>Age</th><th>Window</th><th>O / E</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Rotavirus RV5 → intussusception, dose 1</td><td>2 mo</td><td>7 d</td><td>4.8×</td><td class="flag">flag — signal</td></tr>
+      <tr><td>Rotavirus RV5 → intussusception, dose 1</td><td>2 mo</td><td>21 d</td><td>2.7×</td><td class="flag">flag — signal</td></tr>
+      <tr><td>Rotavirus RV1 → intussusception (6 vs 0.72)</td><td>2 mo</td><td>pub.</td><td>8.3×</td><td class="flag">flag — signal</td></tr>
+      <tr><td>Rotavirus RV5 → intussusception, dose 2</td><td>4 mo</td><td>21 d</td><td>1.0×</td><td class="clear">clear — no signal</td></tr>
+      <tr><td>Rotavirus RV5 → intussusception, dose 3</td><td>6 mo</td><td>21 d</td><td>1.0×</td><td class="clear">clear — no signal</td></tr>
+      <tr><td>MMR → febrile seizures</td><td>12 mo</td><td>7–10 d</td><td>3.7×</td><td class="flag">flag — signal</td></tr>
+      <tr><td>MMRV → febrile seizures</td><td>12 mo</td><td>7–10 d</td><td>7.6×</td><td class="flag">flag — signal</td></tr>
+      <tr><td>MMR+Varicella (separate) → febrile seizures</td><td>12 mo</td><td>7–10 d</td><td>4.0×</td><td class="flag">flag (lower than MMRV)</td></tr>
+    </tbody>
+  </table>
+  <div class="pass">PASS — the engine flags two accepted signals at two ages, recovers the dose-response
+  (MMRV 7.6× &gt; separate 4.0×), and clears the doses that carry no signal. Sensitivity and specificity.</div>
+  <p class="small">Honest reading: the RV1 row (6 vs 0.72 = 8.3×) and the febrile-seizure relative incidences
+  are <b>published</b>. The RV5 ratios are the engine's <b>recovered</b> O/E using a published attributable
+  risk plus an interpolated 2-month background rate — the exact ratio moves with that input, but the flag is
+  robust: every plausible background still puts dose 1 above trend and doses 2–3 on it.</p>
+
+  <h2>4 · The same method on the contested question — 19 years, no model</h2>
+  <p>Now the same observed-vs-expected logic on the <b>real U.S. linked infant-death files</b> — all-cause, by
+  single day of age (the coding-immune axis: age is date arithmetic, not a label that can drift). And here we
+  hold ourselves to the strictest form: <b>no model, no smoothing, no threshold, and years not pooled.</b> We
+  do not fit a curve (a fit would assume the decline's shape); we compare each vaccination-age window only to
+  its own immediately-adjacent equal-width windows of raw days. The one question with no assumptions:
+  <b>does the death count at the vaccination age exceed BOTH neighbors?</b> On a normal declining curve it
+  won't; a real post-shot bump would — and would repeat across years.</p>
+  <p>We ran <b>19 years</b> of real data (1995–2013 and 2023; 2002 auto-excluded by a built-in quality check —
+  its public-use file carries an age-coding artifact, flagged openly rather than hidden). Vaccines and the
+  schedule changed across these years (whole-cell DTP→DTaP, thimerosal removed ~2001, Hib/PCV/rotavirus added,
+  COVID only recently), so we deliberately do <b>not</b> average the years — a formulation- or lot-specific
+  problem would surface as one standout year, which pooling would erase.</p>
+  <table>
+    <caption>Across 19 years: in how many did the vaccination-age window exceed BOTH adjacent equal-width windows? Model-free; no threshold.</caption>
+    <thead><tr><th>Vaccination age</th><th>Years AT-AGE &gt; both neighbors</th><th>Median ratio</th><th>Range across years</th></tr></thead>
+    <tbody>
+      <tr><td>2 months (dose 1)</td><td class="clear">0 of 19</td><td>1.00×</td><td>0.87–1.08</td></tr>
+      <tr><td>4 months (dose 2)</td><td class="clear">0 of 19</td><td>0.99×</td><td>0.80–1.08</td></tr>
+      <tr><td>6 months (dose 3)</td><td class="clear">1 of 19</td><td>0.97×</td><td>0.77–1.17</td></tr>
+    </tbody>
+  </table>
+  <p>At 2 and 4 months the vaccination-age window <b>never once</b> exceeded both its neighbors across 19
+  years; at 6 months it did in a <b>single</b> year (chance-level), with median ratios sitting at or just below
+  1. No constant schedule-timing effect, and no standout year of the kind a bad formulation or lot would
+  produce. It does <i>not</i> prove safety — all-cause dilutes a rare cause-specific signal, the window is a
+  timing test, and it <b>cannot name a product</b>. That last limit is the whole point: attributing any year
+  would need the linked vaccination records (product, lot, date) — the withheld denominator.</p>
+
+  <h2>5 · The credibility pair</h2>
+  <p>Same engine. Two honest outcomes: it <b>catches the real signal</b> when linked data exists (§3), and it
+  returns an <b>honest null</b> on the contested question (§4). That signal was only ever found because a few
+  researchers had <b>linked individual data</b> (FDA Mini-Sentinel, CDC VSD) the public cannot reproduce. The
+  method is not the bottleneck — it is open and proven. <b>The data is.</b></p>
+
+  <h2>6 · The ask — bounded, non-partisan</h2>
+  <div class="card">
+    <p style="margin-bottom:8px"><b>1.</b> Open the denominated, linked data — vaccination dates and outcome
+    dates by age — in the de-identified, date-shifted form already used internally, so any qualified party
+    can run the same engine and get the same answer.</p>
+    <p style="margin-bottom:8px"><b>2.</b> Require signal analyses to be reproducible: published code, pinned
+    data versions, hashes — a result checked, not asserted.</p>
+    <p style="margin-bottom:0"><b>3.</b> Fund the open rebuild of automated EHR-based surveillance — the
+    ESP:VAERS engine that was built and proven in 2011, then shelved — as a public utility.</p>
+  </div>
+  <p>This is <b>not</b> a demand to expose anyone's records. The engine needs <b>dates and ages, not
+  identities.</b> Some things deserve secrecy — a person's identity does. <b>A nation's vaccine-safety
+  denominator does not.</b> The barrier is permission, not privacy.</p>
+
+  <h2>7 · Reproduce it yourself</h2>
+  <pre>python3 intussusception_positive_control.py                 # §3 — catches the real signals
+
+bash gather_all_years.sh                                    # §4 — pull 19 yrs (NBER 1995-2013) + run
+python3 inspect_schedule_bumps.py --quiet --exclude 2002    # §4 — model-free 19-year tally</pre>
+  <p class="small">Every number traces to a cited public source or a hashed input file. The method is open;
+  check it.</p>
+
+  <div class="note">
+    <b>Sources.</b> Yih WK et al., <i>N Engl J Med</i> 2014;370(6):503–512 (PMID 24422676) — FDA
+    Mini-Sentinel/PRISM; RV5 ≈1.1–1.5 excess per 100,000 first doses, null after doses 2–3. ·
+    Weintraub ES et al., <i>N Engl J Med</i> 2014;370(6):513–519 (doi:10.1056/NEJMoa1311738) — CDC VSD;
+    6 observed vs 0.72 expected. · Klein NP et al., <i>Pediatrics</i> 2010 (CDC VSD) — MMRV vs MMR+V febrile
+    seizures, ~1 extra per 2,300 MMRV doses; Vestergaard M et al., <i>JAMA</i> 2004 — MMR febrile-seizure
+    rate ratio ~2.75, days 7–10. · Background intussusception ~2→62 per 100,000 (peak 26–29 weeks):
+    childhood-intussusception review, CDC stacks.cdc.gov/view/cdc/20687. · NCHS Linked Birth/Infant Death
+    public-use period files (all-cause infant deaths by single day of age), 1995–2013 (NBER) and 2023
+    (NCHS FTP); 2002 excluded by a data-quality flag.<br><br>
+    A navigator, not medical or legal advice. Leads, not verdicts; only people, with the data in hand,
+    conclude. · Meridian North / Garrison Node.
+  </div>
+</div>
+
+<script>
+(function(){
+  var bands=[
+    {key:"Infants <1",reported:58,lo:1310,pt:2190,hi:3060},
+    {key:"1–4 yrs",reported:8.7,lo:120,pt:200,hi:280},
+    {key:"5–11 yrs",reported:1.9,lo:42,pt:70,hi:99},
+    {key:"12–17",reported:6.9,lo:120,pt:200,hi:280}
+  ];
+  var W=900,H=470,L=78,R=120,T=24,B=70,y0=H-B,y1=T,x0=L,x1=W-R;
+  var lmin=0,lmax=Math.log10(4000);
+  function Y(v){v=Math.max(v,1);return y0-((Math.log10(v)-lmin)/(lmax-lmin))*(y0-y1);}
+  var NS="http://www.w3.org/2000/svg",svg=document.getElementById("chart");
+  function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+  function tx(x,y,s,o){var t=el("text",o||{});t.setAttribute("x",x);t.setAttribute("y",y);t.textContent=s;svg.appendChild(t);}
+  var defs=el("defs",{});
+  var pat=el("pattern",{id:"hatch",width:7,height:7,patternUnits:"userSpaceOnUse",patternTransform:"rotate(45)"});
+  pat.appendChild(el("rect",{width:7,height:7,fill:"#cdd7e0"}));
+  pat.appendChild(el("rect",{width:3,height:7,fill:"#aebccb"}));
+  defs.appendChild(pat);svg.appendChild(defs);
+  [1,10,100,1000].forEach(function(g){var y=Y(g);
+    svg.appendChild(el("line",{x1:x0,y1:y,x2:x1,y2:y,stroke:"#e4dfd5","stroke-width":1}));
+    tx(x0-10,y+5,g.toLocaleString(),{fill:"#56616e","font-size":14,"text-anchor":"end"});});
+  tx(20,(y0+y1)/2,"deaths per year (log scale)",{fill:"#56616e","font-size":14,"text-anchor":"middle",transform:"rotate(-90 20 "+((y0+y1)/2)+")"});
+  var n=bands.length,slot=(x1-x0)/n;
+  bands.forEach(function(d,i){
+    var cx=x0+slot*(i+0.5),bw=46,yhi=Y(d.hi),ylo=Y(d.lo),yp=Y(d.pt),yr=Y(d.reported);
+    svg.appendChild(el("rect",{x:cx-bw/2,y:yhi,width:bw,height:(ylo-yhi),fill:"url(#hatch)",stroke:"#7d93a8","stroke-width":1.5,rx:3}));
+    svg.appendChild(el("line",{x1:cx-bw/2-4,y1:yp,x2:cx+bw/2+4,y2:yp,stroke:"#284258","stroke-width":2.5}));
+    tx(cx+bw/2+9,yp+4,"est. "+d.pt.toLocaleString(),{fill:"#284258","font-size":13,"text-anchor":"start"});
+    svg.appendChild(el("rect",{x:cx-9,y:yr,width:18,height:(y0-yr),fill:"#a85a52",rx:2}));
+    tx(cx,yr-8,Math.round(d.reported).toLocaleString(),{fill:"#7e3f39","font-size":14,"text-anchor":"middle","font-weight":600});
+    svg.appendChild(el("line",{x1:cx+22,y1:ylo,x2:cx+22,y2:yr,stroke:"#a85a52","stroke-width":1,"stroke-dasharray":"3 3"}));
+    tx(cx,y0+24,d.key,{fill:"#1e2630","font-size":15,"text-anchor":"middle"});
+    tx(cx,y0+44,"reported ≈ "+(Math.round(d.reported/d.pt*1000)/10)+"% of est.",{fill:"#56616e","font-size":13,"text-anchor":"middle"});
+  });
+  svg.appendChild(el("line",{x1:x0,y1:y0,x2:x1,y2:y0,stroke:"#56616e","stroke-width":1.5}));
+})();
+</script>
+</body></html>
