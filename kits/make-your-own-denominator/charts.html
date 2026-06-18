@@ -54,11 +54,79 @@
     <p class="sub" style="font-size:14px;margin:4px 8px 6px">Illustration of the method's sensitivity, not real data.</p>
   </div>
 
+  <h2>3 · Every count is a fraction missing its bottom number</h2>
+  <p>A widely-shared chart compares COVID-vaccine death <i>reports</i> in 2021 (1,932) with all other
+  vaccines' reports over 2001–2021 (404). But a count is only the top of a fraction — and the bottom number
+  (how many doses, and how hard people were looking) is missing for <b>both</b> bars, and for <b>every</b>
+  side of the debate.</p>
+  <div class="card" style="padding:18px 20px">
+    <div style="display:flex;gap:14px;align-items:stretch">
+      <div style="flex:1;text-align:center">
+        <div style="font-weight:600;color:var(--accd)">COVID vaccine · 2021</div>
+        <div style="font-family:var(--serif);font-size:40px;font-weight:600">1,932</div>
+        <div style="color:var(--mut);font-size:13px">death reports</div>
+        <div style="height:3px;background:var(--ink);margin:9px 12px"></div>
+        <div style="background:#e7eef3;border:1px solid #9db4c9;border-radius:9px;padding:10px 12px;text-align:left;font-size:13.5px;color:var(--accd);min-height:96px"><b>doses:</b> tens of millions in months · oldest &amp; frailest first · peak attention &amp; active reporting · brand-new product under a microscope</div>
+        <div style="margin-top:9px;color:var(--mut)">rate = <b style="color:var(--ink)">?</b></div>
+      </div>
+      <div style="display:flex;align-items:center;font-family:var(--serif);font-size:34px;color:var(--mut)">≠</div>
+      <div style="flex:1;text-align:center">
+        <div style="font-weight:600;color:var(--accd)">All other vaccines · 2001–2021</div>
+        <div style="font-family:var(--serif);font-size:40px;font-weight:600">404</div>
+        <div style="color:var(--mut);font-size:13px">death reports</div>
+        <div style="height:3px;background:var(--ink);margin:9px 12px"></div>
+        <div style="background:#e7eef3;border:1px solid #9db4c9;border-radius:9px;padding:10px 12px;text-align:left;font-size:13.5px;color:var(--accd);min-height:96px"><b>doses:</b> a different, unstated total · over <b>20 years</b> · routine, low attention · far less reporting · a familiar product no one watched closely</div>
+        <div style="margin-top:9px;color:var(--mut)">rate = <b style="color:var(--ink)">?</b></div>
+      </div>
+    </div>
+    <div style="background:#e7efe8;border:1px solid var(--good);border-radius:10px;padding:14px 18px;margin-top:16px;text-align:center">
+      <div style="color:var(--mut);font-size:15px;margin-bottom:6px">Not "nothing to see here." Not "proof of harm." From counts alone it's <b>un-computable</b> — so the honest thing we can <i>all</i> ask for is the same:</div>
+      <div style="font-family:var(--serif);font-size:24px;font-weight:600;color:var(--goodd)">Release the doses-denominated data.</div>
+    </div>
+  </div>
+
+  <h2>4 · What the denominator turns a count into</h2>
+  <p>Add the missing pieces and a scary count becomes something you can actually judge — not by picking a side,
+  but by computing one:</p>
+  <div class="card" style="padding:18px 20px">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;font-size:15px">
+      <span style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 12px"><b>1,932</b> reports</span>
+      <span style="color:var(--mut)">÷ doses given →</span>
+      <span style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 12px">a report <b>rate</b> <span style="color:var(--mut)">(better — but reports still scale with attention)</span></span>
+      <span style="color:var(--mut)">vs deaths expected by background →</span>
+      <span style="background:#e7efe8;border:1px solid var(--good);border-radius:8px;padding:8px 12px;color:var(--goodd)"><b>observed vs expected</b> — now judgeable</span>
+    </div>
+    <p style="margin:14px 0 0;font-size:15px">Done this way the engine flags <b>real</b> signals and clears coincidences. Worked example: rotavirus→intussusception came out <b>6 observed vs 0.72 expected</b> (O/E 8.3) — a real signal, and that vaccine was withdrawn in 1999. The same machine returns an honest null where there's nothing. A per-dose <i>report</i> rate alone still isn't a risk rate — only the comparison to expected is, and that needs the linked, denominated data.</p>
+  </div>
+
+  <h2>5 · When the signal took too long — and what fixes it</h2>
+  <p>Two histories, one lesson. A passive, count-only system is slow and can't size a signal; a denominated,
+  linked one catches and quantifies it. This is not "drugs bad" or "vaccines bad" — it's about how fast the
+  system can protect people.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:14px">
+    <div class="card" style="flex:1;min-width:280px;border-left:5px solid var(--warn);border-radius:0 12px 12px 0">
+      <div style="font-family:var(--serif);font-size:19px;font-weight:600">Vioxx — the slow way (a drug)</div>
+      <p style="font-size:15px;margin:8px 0 0">A heart-attack signal appeared in a trial in <b>2000</b> — and was explained away. A placebo trial confirmed it and the drug was withdrawn in <b>2004</b>. An FDA scientist later estimated <b>~88,000–140,000 excess serious cardiac events</b> over its market life. The ~4-year gap is <b>why Congress (FDAAA 2007) created the FDA Sentinel active-surveillance system</b> in 2008 — so the next signal wouldn't take four years.</p>
+    </div>
+    <div class="card" style="flex:1;min-width:280px;border-left:5px solid var(--good);border-radius:0 12px 12px 0">
+      <div style="font-family:var(--serif);font-size:19px;font-weight:600">Pandemrix — the fast way (a vaccine)</div>
+      <p style="font-size:15px;margin:8px 0 0">In <b>2010</b>, Sweden and Finland saw a cluster of childhood narcolepsy after the H1N1 vaccine. Because the Nordics have <b>linked health registries</b>, the signal was confirmed in <b>months</b> — a roughly <b>12–13× increased risk</b> in vaccinated children. The denominated, linked model worked exactly as it should.</p>
+    </div>
+  </div>
+  <p>Vioxx is <i>why</i> the US built denominated active surveillance; Pandemrix shows it works. The ask is
+  simply to make that capability <b>public and reproducible</b>, so any citizen — not just a few researchers —
+  can run the check.</p>
+
   <div class="note">
     <b>Sources.</b> RotaShield/intussusception: CDC historical (archive.cdc.gov) &amp; MMWR 1999 (PMID 15343145).
     · VAPP / OPV→IPV: CDC VAPP FAQ. · 1976 swine flu &amp; Guillain-Barré: CDC Museum. · MMRV febrile seizures:
     Klein NP et al., <i>Pediatrics</i> 2010 (PMID 20587679). · Rotarix porcine circovirus suspension: FDA, 2010.
-    · Self-controlled-design limits: Hallas, <i>J Intern Med</i> 2014; Cadarette (ISPE), <i>PDS</i> 2021. ·
+    · Self-controlled-design limits: Hallas, <i>J Intern Med</i> 2014; Cadarette (ISPE), <i>PDS</i> 2021.
+    · Vioxx withdrawal &amp; excess-event estimate: FDA 2004; Graham (FDA), ~88,000–140,000 excess CHD over
+    market life (NPR/Lancet 2005). · FDA Sentinel Initiative, created under FDAAA 2007, launched 2008
+    (fda.gov/safety/fdas-sentinel-initiative). · Pandemrix &amp; childhood narcolepsy: Finland 2010 cluster
+    (PLOS ONE 2012, PMC3314680); ~12–13× risk, Nordic linked registries; ECDC. · MHRA Yellow Card figures as
+    posted (illustrative; report counts, not confirmed causal deaths). ·
     A navigator, not medical advice. Leads, not verdicts. Meridian North / Garrison Node.
   </div>
 </div>
